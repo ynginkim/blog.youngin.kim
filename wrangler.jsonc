@@ -1,0 +1,15 @@
+// Cloudflare Workers (정적 자산만). `npm run build`로 만든 dist/를 그대로 올린다.
+// 사용자 도메인 blog.youngin.kim은 Cloudflare 대시보드(Worker > Settings > Domains & Routes)에 붙어 있다.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blog",
+  "account_id": "56033a539f721535b619282bb5a20bd2",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": true,
+  "preview_urls": false
+}
