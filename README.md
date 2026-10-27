@@ -46,9 +46,9 @@
 
 ## 배포
 
-- **자동 배포 (Cloudflare Workers Builds)**: Worker `blog`에 이 저장소의 `main` 브랜치가 연결되어 있다(빌드 `npm run build`, 배포 `npx wrangler deploy`). 빌드 로그는 Cloudflare 대시보드 > Workers & Pages > `blog` > Deployments에서 본다.
-  - push 때 빌드가 시작되려면 GitHub의 Cloudflare 앱(Settings > Applications > Cloudflare Workers and Pages > Configure)이 이 저장소에 접근할 수 있어야 한다. 'Only select repositories'로 되어 있다면 `blog.youngin.kim`을 추가한다.
-  - push했는데 빌드가 돌지 않으면 대시보드의 `blog` > Deployments에서 빌드를 직접 실행할 수 있다.
+- **자동 배포 (Cloudflare Workers Builds)**: Worker `blog`에 이 저장소의 `main` 브랜치가 연결되어 있다. `main`에 push하면 `npm run build` → `npx wrangler deploy`가 자동으로 돌아 2~3분 안에 https://blog.youngin.kim 에 반영된다(2026-10-27 push 빌드로 확인). 다른 브랜치는 배포되지 않는다.
+  - 빌드 상태와 로그: Cloudflare 대시보드 > Workers & Pages > `blog` > Deployments. 빌드를 직접 다시 돌릴 수도 있다.
+  - push해도 빌드가 시작되지 않으면 GitHub Settings > Applications > Cloudflare Workers and Pages > Configure에서 이 저장소가 접근 목록에 있는지 확인한다.
 - **손으로 배포**: `npx wrangler login` 후 `npm run deploy`.
 
 ## 구조
