@@ -1,5 +1,5 @@
 // Cloudflare Workers (정적 자산만). `npm run build`로 만든 dist/를 그대로 올린다.
-// 사용자 도메인 blog.youngin.kim은 Cloudflare 대시보드(Worker > Settings > Domains & Routes)에 붙어 있다.
+// main에 push하면 Workers Builds가 `npm run build` → `npx wrangler deploy`로 배포한다.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blog",
@@ -10,6 +10,7 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   },
+  "routes": [{ "pattern": "blog.youngin.kim", "custom_domain": true }],
   "workers_dev": true,
   "preview_urls": false
 }
