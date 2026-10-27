@@ -46,7 +46,7 @@
 
 ## 배포
 
-- **자동 배포**: Cloudflare 대시보드 > Workers & Pages > `blog` > Settings > Build에서 이 저장소를 연결한다(빌드 명령 `npm run build`, 배포 명령 `npx wrangler deploy`, 브랜치 `main`). 연결 후에는 `main`에 push할 때마다 몇십 초 안에 반영된다.
+- **자동 배포**: Cloudflare Workers Builds가 이 저장소의 `main` 브랜치에 연결되어 있다. push하면 `npm run build` → `npx wrangler deploy`가 돌고, 보통 1~2분 안에 https://blog.youngin.kim 에 반영된다. 진행 상황과 로그는 Cloudflare 대시보드 > Workers & Pages > `blog` > Deployments(빌드)에서 본다. 다른 브랜치는 배포되지 않는다.
 - **손으로 배포**: `npx wrangler login` 후 `npm run deploy`.
 
 ## 구조
