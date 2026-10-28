@@ -2,7 +2,7 @@
 
 김영인의 블로그. 마크다운으로 글을 쓰면 `scripts/build.mjs`가 정적 HTML로 바꾸고, Cloudflare Workers(정적 자산)가 https://blog.youngin.kim 으로 내보낸다.
 
-디자인은 `theme/`에 있다. 읽기를 우선한 한 단 구성(Pretendard 17px, 줄 간격 1.75, 본문 폭 640px)이고, 라이트/다크 토글(기본 라이트)과 오른쪽 호버 목차가 있다. 화면 틀은 `site.config.mjs`의 `layout`으로 고른다: `sidebar`(왼쪽 사이드바) · `topnav`(상단 메뉴) · `hybrid`(상단 메뉴 + 넓은 화면에서만 사이드바).
+디자인은 `theme/`에 있다. 읽기를 우선한 한 단 구성(Pretendard 17px, 줄 간격 1.8, 본문 폭 640px)이고, 라이트/다크 토글(기본 라이트)과 오른쪽 호버 목차가 있다. 화면 틀은 `site.config.mjs`의 `layout`으로 고른다: `sidebar`(왼쪽 사이드바) · `topnav`(상단 메뉴) · `hybrid`(상단 메뉴 + 넓은 화면에서만 사이드바).
 
 ## 새 글 쓰기
 
@@ -44,7 +44,7 @@
    세 가지 화면 틀을 한꺼번에 보려면 `npm run build:variants` → `preview/v1`(sidebar) · `v2`(topnav) · `v3`(hybrid), 각각 `node scripts/serve.mjs 4401 preview/v1`처럼 띄운다.
 5. `git commit` 후 `git push`하면 자동으로 배포된다(아래).
 
-홈의 연재·글 목록, `/posts/`(연도별 글), `/series/`(연재), 사이드바, 분류/태그 페이지, `rss.xml`, `sitemap.xml`은 모두 글에서 자동으로 만들어진다. 소개 페이지는 `pages/about.md`를 고치면 된다(`pages/` 안의 다른 `.md`도 `/<파일이름>/`로 나간다).
+홈의 글 목록(연재 글은 제목 옆에 `연재명 · N부` 라벨), `/posts/`(연도별 글), 분류/태그 페이지, `rss.xml`, `sitemap.xml`은 모두 글에서 자동으로 만들어진다. 연재 전용 페이지는 없고, 예전 `/series/` 주소는 `public/_redirects`로 `/posts/`에 넘긴다. 소개 페이지는 `pages/about.md`를 고치면 된다(`pages/` 안의 다른 `.md`도 `/<파일이름>/`로 나간다).
 
 ## 배포
 

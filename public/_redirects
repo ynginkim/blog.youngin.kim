@@ -1,0 +1,4 @@
+# 연재 전용 페이지는 없앴다. 예전 주소는 글 목록으로 보낸다.
+/series /posts/ 301
+/series/ /posts/ 301
+/series/* /posts/ 301

@@ -27,7 +27,7 @@ export function createLayout({ site, layout, nav, series, posts, assetVersion })
   const sidebar = (cur) => {
     const cur1 = (href) => (href === cur ? ' aria-current="page"' : '');
     const seriesHtml = series.length ? `<div class="sb-sec"><div class="sb-label">연재</div>${series.map((s) => `
-      <a class="sb-series" href="${s.url}"${cur1(s.url)}>${esc(s.title)}</a>
+      ${s.url ? `<a class="sb-series" href="${s.url}"${cur1(s.url)}>${esc(s.title)}</a>` : `<span class="sb-series">${esc(s.title)}</span>`}
       <ol class="sb-parts">${s.posts.map((p) => `<li><a href="${p.url}"${cur1(p.url)}><span class="n">${String(p.part).padStart(2, '0')}</span>${esc(p.short)}</a></li>`).join('')}</ol>`).join('')}</div>` : '';
     const solo = posts.filter((p) => !p.series).slice(0, 8);
     const postsHtml = solo.length ? `<div class="sb-sec"><div class="sb-label">최근 글</div>${solo.map((p) => `<a href="${p.url}"${cur1(p.url)}>${esc(p.short)}</a>`).join('')}</div>` : '';

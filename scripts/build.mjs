@@ -84,7 +84,7 @@ const posts = load('posts').map(({ file, slug, data, content }) => {
 // 연재: site.config.mjs의 series + 글의 series/part
 const series = Object.entries(seriesConf).map(([id, s]) => {
   const list = posts.filter((p) => p.series === id).sort((a, b) => a.part - b.part);
-  return { id, title: s.title, description: s.description ?? '', url: `/series/${id}/`, posts: list, updated: list.map((p) => p.date).sort().at(-1) };
+  return { id, title: s.title, description: s.description ?? '', url: null, posts: list, updated: list.map((p) => p.date).sort().at(-1) };
 }).filter((s) => s.posts.length);
 const seriesOf = (p) => series.find((s) => s.id === p.series);
 
@@ -98,7 +98,7 @@ const krDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${y
 const css = fs.readFileSync(path.join(ROOT, 'theme/style.css'), 'utf8');
 const js = fs.readFileSync(path.join(ROOT, 'theme/site.js'), 'utf8');
 const assetVersion = crypto.createHash('sha1').update(css + js).digest('hex').slice(0, 8);
-const nav = site.nav ?? [['/posts/', '글'], ['/series/', '연재'], ['/about/', '소개']];
+const nav = site.nav ?? [['/posts/', '글'], ['/about/', '소개']];
 const render = createLayout({ site, layout: LAYOUT, nav, series, posts, assetVersion });
 
 const pages = []; // sitemap용
@@ -125,11 +125,9 @@ function emit(url, { title, body, description = site.description, type = 'websit
 // 목록 조각
 const postItem = (p) => {
   const s = seriesOf(p);
-  return `<li><a href="${p.url}"><span class="t">${esc(p.title)}</span>${p.summary ? `<span class="s">${esc(p.summary)}</span>` : ''}<span class="m">${krDate(p.date)}${s ? ` · <span class="ser">${esc(s.title)} ${p.part}편</span>` : ''}${p.draft ? ' · 초안' : ''}</span></a></li>`;
+  return `<li><a href="${p.url}"><span class="t">${esc(p.title)}${s ? ` <span class="ser">${esc(s.title)} · ${p.part}부</span>` : ''}</span>${p.summary ? `<span class="s">${esc(p.summary)}</span>` : ''}<span class="m">${krDate(p.date)}${p.draft ? ' · 초안' : ''}</span></a></li>`;
 };
 const postList = (list) => (list.length ? `<ul class="plist">${list.map(postItem).join('')}</ul>` : '<p class="page-desc">아직 글이 없습니다.</p>');
-const seriesItem = (s, { parts = true } = {}) => `<li><a href="${s.url}"><span class="k">연재 · ${s.posts.length}편</span><span class="t">${esc(s.title)}</span>${s.description ? `<span class="s">${esc(s.description)}</span>` : ''}</a>${parts ? `<ol>${s.posts.map((p) => `<li><a href="${p.url}">${esc(p.title)}</a></li>`).join('')}</ol>` : ''}</li>`;
-const sec = (title, more, inner) => `<section class="sec"><div class="sec-h"><h2>${esc(title)}</h2>${more ? `<a href="${more[0]}">${esc(more[1])}</a>` : ''}</div>${inner}</section>`;
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'assets'), { recursive: true });
@@ -140,9 +138,8 @@ fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
 // 홈
 emit('/', {
   title: site.title, lastmod: posts[0]?.date,
-  body: `<div class="intro"><h1>${esc(site.title)}</h1><p>${esc(site.description)}</p></div>
-${series.length ? sec('연재', ['/series/', '모든 연재'], `<ul class="slist">${series.map((s) => seriesItem(s)).join('')}</ul>`) : ''}
-${sec('글', posts.length > 10 ? ['/posts/', '모든 글'] : null, postList(posts.slice(0, 10)))}`,
+  body: `<p class="intro">${esc(site.description)}</p>
+${postList(posts.slice(0, 20))}${posts.length > 20 ? '<p class="more"><a href="/posts/">모든 글 →</a></p>' : ''}`,
 });
 
 // 글 목록(연도별)
@@ -152,28 +149,22 @@ ${sec('글', posts.length > 10 ? ['/posts/', '모든 글'] : null, postList(post
     body: `<h1 class="page-title">글</h1><p class="page-desc">모두 ${posts.length}편</p>${years.map((y) => `<h2 class="year">${y}</h2>${postList(posts.filter((p) => p.date.startsWith(y)))}`).join('')}` });
 }
 
-// 연재
-emit('/series/', { title: '연재', lastmod: series[0]?.updated, description: `${site.title}의 연재`,
-  body: `<h1 class="page-title">연재</h1><p class="page-desc">여러 편으로 이어지는 글</p><ul class="slist">${series.map((s) => seriesItem(s)).join('')}</ul>` });
-for (const s of series) {
-  emit(s.url, { title: s.title, lastmod: s.updated, description: s.description || `${s.title} 연재`,
-    body: `<a class="kicker" href="/series/">연재<span class="dot"></span>${s.posts.length}편</a><h1 class="page-title">${esc(s.title)}</h1>${s.description ? `<p class="page-desc">${esc(s.description)}</p>` : ''}${postList(s.posts).replace(/<span class="m">([^<]*) · <span class="ser">[^<]*<\/span>/g, (m, d) => `<span class="m">${d}`)}` });
-}
+// 연재 전용 페이지는 두지 않는다. 연재는 글 제목 옆 라벨과 글 안의 연재 상자로만 보인다.
 
 // 글
 posts.forEach((p, i) => {
   const s = seriesOf(p);
   let prev, next, prevLabel = '이전 글', nextLabel = '다음 글';
   if (s) {
-    const j = s.posts.indexOf(p); prev = s.posts[j - 1]; next = s.posts[j + 1]; prevLabel = '이전 편'; nextLabel = '다음 편';
+    const j = s.posts.indexOf(p); prev = s.posts[j - 1]; next = s.posts[j + 1]; prevLabel = `이전 · ${prev?.part ?? ''}부`; nextLabel = `다음 · ${next?.part ?? ''}부`;
   } else { prev = posts[i + 1]; next = posts[i - 1]; }
-  const seriesBox = s ? `<nav class="series" aria-label="연재 목차"><div class="series-h"><a href="${s.url}">${esc(s.title)}</a><small>${p.part} / ${s.posts.length}편</small></div><ol>${s.posts.map((q) => `<li>${q === p ? `<span aria-current="page">${esc(q.title)}</span>` : `<a href="${q.url}">${esc(q.title)}</a>`}</li>`).join('')}</ol></nav>` : '';
+  const seriesBox = s ? `<nav class="series" aria-label="연재 목차"><div class="series-h"><span>${esc(s.title)}</span><small>${p.part} / ${s.posts.length}부</small></div><ol>${s.posts.map((q) => `<li>${q === p ? `<span aria-current="page">${esc(q.title)}</span>` : `<a href="${q.url}">${esc(q.title)}</a>`}</li>`).join('')}</ol></nav>` : '';
   const pnav = prev || next ? `<nav class="pnav" aria-label="${prevLabel}·${nextLabel}">${prev ? `<a class="prev" href="${prev.url}"><small>← ${prevLabel}</small><span>${esc(prev.title)}</span></a>` : ''}${next ? `<a class="next" href="${next.url}"><small>${nextLabel} →</small><span>${esc(next.title)}</span></a>` : ''}</nav>` : '';
   emit(p.url, {
     title: p.title, type: 'article', description: p.summary || site.description, lastmod: p.date, toc: true,
     body: `<article>
 <header class="post-head">
-${s ? `<a class="kicker" href="${s.url}">${esc(s.title)}<span class="dot"></span>${p.part}편</a>` : `<a class="kicker" href="/category/${p.category}/">${esc(catName(p.category))}</a>`}
+${s ? `<span class="kicker">${esc(s.title)}<span class="dot"></span>${p.part}부</span>` : `<a class="kicker" href="/category/${p.category}/">${esc(catName(p.category))}</a>`}
 <h1 class="post-title">${esc(p.title)}</h1>
 <div class="post-meta"><time datetime="${p.date}">${krDate(p.date)}</time><span>약 ${p.minutes}분</span>${p.draft ? '<span>초안</span>' : ''}</div>
 </header>
