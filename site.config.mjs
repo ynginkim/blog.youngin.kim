@@ -12,7 +12,7 @@ export default {
     note: { name: '노트', color: 2 },
   },
   // 화면 틀: 'sidebar'(왼쪽 사이드바) · 'topnav'(상단 메뉴) · 'hybrid'(상단 메뉴 + 넓은 화면에서만 사이드바)
-  layout: 'topnav',
+  layout: 'hybrid',
   // 연재: 글 frontmatter에 series: <아이디>, part: <번호>를 적는다.
   series: {
     'ai-native-note': {
