@@ -1,8 +1,8 @@
-// 로컬 미리보기: node scripts/serve.mjs [포트] → http://localhost:4321
+// 로컬 미리보기: node scripts/serve.mjs [포트] [폴더=dist] → http://localhost:4321
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-const DIST = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../dist');
+const DIST = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', process.argv[3] ?? 'dist');
 const port = Number(process.argv[2] ?? 4321);
 const types = { '.html': 'text/html; charset=utf-8', '.xml': 'application/xml; charset=utf-8', '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg' };
 http.createServer((req, res) => {

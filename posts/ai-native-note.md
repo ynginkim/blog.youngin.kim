@@ -5,7 +5,8 @@ date: "2026-10-04"
 category: "essay"
 tags: ["PKM", "ai-native-note"]
 summary: "AI-native note가 해결하려는 핵심 문제는 Human knowledge integration이다."
-featured: true
+series: "ai-native-note"
+part: 2
 order: 2
 draft: false
 ---

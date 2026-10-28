@@ -6,7 +6,8 @@
     "build": "node scripts/build.mjs",
     "build:drafts": "node scripts/build.mjs --drafts",
     "dev": "node scripts/build.mjs --drafts && node scripts/serve.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "build:variants": "node scripts/build.mjs --drafts --layout=sidebar --out=preview/v1 && node scripts/build.mjs --drafts --layout=topnav --out=preview/v2 && node scripts/build.mjs --drafts --layout=hybrid --out=preview/v3"
   },
   "engines": {
     "node": ">=20"

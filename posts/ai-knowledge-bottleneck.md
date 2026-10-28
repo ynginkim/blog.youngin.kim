@@ -5,7 +5,8 @@ date: "2026-10-04"
 category: "essay"
 tags: ["AI", "learning", "PKM"]
 summary: "AI는 지식에 대한 접근 비용을 거의 제거하고 있지만, 지식을 인간의 인지 구조 안으로 통합하는 비용까지 제거하지는 못한다."
-featured: true
+series: "ai-native-note"
+part: 1
 order: 1
 draft: false
 ---
