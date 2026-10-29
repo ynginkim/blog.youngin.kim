@@ -45,9 +45,11 @@ function mdToHtml(src) {
     },
   });
   // <!-- toggle: 제목 --> ... <!-- /toggle --> 는 접히는 블록으로
+  // <!-- ai-answer: 제목 --> ... <!-- /ai-answer --> 는 AI와 함께 정리한 내용을 담는 회색 접힘 상자로(본문과 구분)
   const folds = [];
-  src = src.replace(/<!--\s*toggle:\s*(.+?)\s*-->([\s\S]*?)<!--\s*\/toggle\s*-->/g, (all, title, inner) => {
-    folds.push(`<details class="fold"><summary>${esc(title)}</summary><div class="fold-body">${md.parse(inner)}</div></details>`);
+  src = src.replace(/<!--\s*(toggle|ai-answer):\s*(.+?)\s*-->([\s\S]*?)<!--\s*\/\1\s*-->/g, (all, kind, title, inner) => {
+    const ai = kind === 'ai-answer';
+    folds.push(`<details class="fold${ai ? ' ai-answer' : ''}"><summary>${esc(title)}</summary><div class="fold-body">${md.parse(inner)}</div></details>`);
     return `\n\n<!--FOLD_${folds.length - 1}-->\n\n`;
   });
   return md.parse(src).replace(/<!--FOLD_(\d+)-->/g, (all, i) => folds[+i]);

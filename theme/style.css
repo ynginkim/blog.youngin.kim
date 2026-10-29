@@ -260,6 +260,16 @@ a.kicker:hover { color: var(--accent); }
 .fold[open] > summary::before { transform: rotate(45deg); }
 .fold > summary:hover { color: var(--accent); }
 .fold-body { padding: 4px 0 24px; }
+/* AI와 함께 정리한 생각 상자: 본문과 구분되도록 회색 배경·작은 글씨 */
+.fold.ai-answer { background: var(--bg-soft); border: 1px solid var(--line-strong); border-radius: 10px; padding: 0 18px; }
+.fold.ai-answer > summary { padding: 13px 0; font-size: 14.5px; font-weight: 550; color: var(--muted); }
+.fold.ai-answer > summary:hover { color: var(--head); }
+.fold.ai-answer[open] > summary { border-bottom: 1px solid var(--line); }
+.fold.ai-answer .fold-body { padding: 14px 0 16px; font-size: 14.5px; line-height: 1.75; color: var(--muted); }
+.fold.ai-answer .fold-body p, .fold.ai-answer .fold-body ul { margin-bottom: .9em; }
+.fold.ai-answer .fold-body > :last-child { margin-bottom: 0; }
+.fold.ai-answer .fold-body strong { color: var(--text); font-weight: 600; }
+.fold.ai-answer .fold-body li { margin: .3em 0; }
 
 /* ---------- 글 꼬리 ---------- */
 .post-foot { margin-top: 64px; }
