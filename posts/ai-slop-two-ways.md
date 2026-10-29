@@ -2,6 +2,7 @@
 title: "AI slop 시대의 두 가지 작업 방식"
 date: "2026-04-23"
 category: "note"
+group: "ai"
 tags: ["AI", "AI슬롭", "의도공학"]
 summary: "설득이 필요한 일에는 사람의 정제를, 대량 실험에는 대중의 피드백을. 다만 AI slop에 대한 책임은 남는다."
 draft: false

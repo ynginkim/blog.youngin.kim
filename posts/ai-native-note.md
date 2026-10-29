@@ -3,6 +3,7 @@ title: "그렇다면 AI-native note는 무엇이어야 하는가"
 short: "AI-native note의 조건"
 date: "2026-10-04"
 category: "essay"
+group: "learning"
 tags: ["PKM", "ai-native-note"]
 summary: "AI-native note가 해결하려는 핵심 문제는 Human knowledge integration이다."
 series: "ai-native-note"

@@ -2,6 +2,7 @@
 title: "전문가가 필요할까"
 date: "2025-12-21"
 category: "note"
+group: "learning"
 tags: ["AI시대", "교육", "학습"]
 summary: "교수급 지식을 한 달 구독료로 얻는 시대에, 한 분야의 전공보다 궁금한 것들을 엮어 배우는 게 맞지 않을까."
 draft: false

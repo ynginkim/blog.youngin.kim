@@ -3,6 +3,7 @@ title: "AI 시대, 지식 습득의 새로운 병목은 어디에 있는가"
 short: "지식 습득의 새로운 병목"
 date: "2026-10-04"
 category: "essay"
+group: "learning"
 tags: ["AI", "learning", "PKM"]
 summary: "AI는 지식에 대한 접근 비용을 거의 제거하고 있지만, 지식을 인간의 인지 구조 안으로 통합하는 비용까지 제거하지는 못한다."
 series: "ai-native-note"

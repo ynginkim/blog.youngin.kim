@@ -11,6 +11,13 @@ export default {
     essay: { name: '에세이', color: 1 },
     note: { name: '노트', color: 2 },
   },
+  // 홈 묶음: 글 frontmatter의 group 값 → 홈에서 보이는 묶음 이름. 적힌 순서대로 홈에 나온다.
+  // group이 없거나 여기에 없는 글은 맨 아래 '그 밖의 글'로 모인다. '글' 탭(/posts/)에는 영향이 없다.
+  groups: {
+    ai: { name: 'AI와 일하기' },
+    learning: { name: '배움과 지식' },
+    retro: { name: '회고' },
+  },
   // 화면 틀: 'sidebar'(왼쪽 사이드바) · 'topnav'(상단 메뉴) · 'hybrid'(상단 메뉴 + 넓은 화면에서만 사이드바)
   layout: 'topnav',
   // 연재: 글 frontmatter에 series: <아이디>, part: <번호>를 적는다.

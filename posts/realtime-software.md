@@ -2,6 +2,7 @@
 title: "리얼타임 소프트웨어 시대"
 date: "2026-02-15"
 category: "note"
+group: "ai"
 tags: ["AI시대", "개발", "클로드코드"]
 summary: "코드에 이어 프롬프트까지 AI에게 맡기는 지금, 다수를 위한 범용적인 소프트웨어가 의미를 가질 수 있을까?"
 draft: false

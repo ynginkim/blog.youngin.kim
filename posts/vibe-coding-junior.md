@@ -3,6 +3,7 @@ title: "바이브코딩이 시니어 개발자에게만 좋을까? 주니어를 
 short: "바이브코딩과 주니어"
 date: "2026-02-14"
 category: "essay"
+group: "ai"
 tags: ["AI", "바이브코딩", "커리어"]
 summary: "AI라는 슈퍼 사수가 생긴 지금, 시니어냐 주니어냐보다 얼마나 빠르게 영역을 넓히느냐가 중요하다."
 draft: false

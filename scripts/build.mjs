@@ -73,8 +73,10 @@ const posts = load('posts').map(({ file, slug, data, content }) => {
   const series = data.series ? String(data.series) : null;
   if (series && !seriesConf[series]) fail(`series '${series}'가 site.config.mjs의 series에 없다`);
   if (series && !Number.isInteger(data.part)) fail('series가 있으면 part(1, 2, …)도 적는다');
+  const group = data.group ? String(data.group) : null;
+  if (group && !(site.groups ?? {})[group]) fail(`group '${group}'이 site.config.mjs의 groups에 없다`);
   const tags = (Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : []).map(String);
-  return { slug, title: String(data.title), short: data.short ? String(data.short) : String(data.title), date, category, tags, series, part: series ? data.part : null,
+  return { slug, title: String(data.title), short: data.short ? String(data.short) : String(data.title), date, category, group, tags, series, part: series ? data.part : null,
     summary: data.summary ? String(data.summary) : '', order: Number(data.order ?? 0), draft: data.draft === true, content,
     url: `/posts/${slug}/`, minutes: Math.max(1, Math.round(content.replace(/<!--\s*toggle:[\s\S]*?<!--\s*\/toggle\s*-->/g, '').replace(/\s/g, '').length / 500)) };
 }).filter((p) => withDrafts || !p.draft)
@@ -135,11 +137,17 @@ fs.cpSync(path.join(ROOT, 'public'), OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'assets/style.css'), css);
 fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
 
-// 홈
+// 홈: 묶음별로 제목 + 날짜만 짧게
+const dotDate = (d) => d.replaceAll('-', '.');
+const groupConf = site.groups ?? {};
+const homeGroups = [...Object.entries(groupConf).map(([id, g]) => ({ id, name: g.name, list: posts.filter((p) => p.group === id) })),
+  { id: 'etc', name: '그 밖의 글', list: posts.filter((p) => !groupConf[p.group]) }].filter((g) => g.list.length);
+const homeRow = (p) => `<li><a href="${p.url}"><span class="t">${esc(p.title)}</span><time datetime="${p.date}">${dotDate(p.date)}${p.draft ? ' · 초안' : ''}</time></a></li>`;
 emit('/', {
   title: site.title, lastmod: posts[0]?.date,
   body: `<p class="intro">${esc(site.description)}</p>
-${postList(posts.slice(0, 20))}${posts.length > 20 ? '<p class="more"><a href="/posts/">모든 글 →</a></p>' : ''}`,
+${homeGroups.map((g) => `<section class="hgroup" aria-labelledby="g-${g.id}"><h2 id="g-${g.id}">${esc(g.name)}<span class="n">${g.list.length}</span></h2><ul class="hlist">${g.list.map(homeRow).join('')}</ul></section>`).join('\n')}
+<p class="more"><a href="/posts/">전체 글 보기 →</a></p>`,
 });
 
 // 글 목록(연도별)

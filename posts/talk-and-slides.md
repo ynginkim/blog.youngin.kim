@@ -2,6 +2,7 @@
 title: "말과 장표의 역할을 분리하는 강의"
 date: "2026-08-26"
 category: "note"
+group: "learning"
 tags: ["발표", "스토리텔링"]
 summary: "장표는 구조와 직관을 보여주고, 말은 청중이 따라갈 이해의 경로를 만든다."
 draft: false

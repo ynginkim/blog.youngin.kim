@@ -132,6 +132,20 @@ main { display: block; min-height: 60vh; }
 .more a { color: var(--muted); text-decoration: none; }
 .more a:hover { color: var(--head); }
 .sec { margin: 0 0 64px; }
+/* 홈 묶음: 제목 + 날짜 한 줄 */
+.hgroup { margin: 0 0 40px; }
+.hgroup h2 { display: flex; align-items: baseline; gap: 8px; margin: 0 0 4px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: .01em; }
+.hgroup h2 .n { font-size: 12.5px; font-weight: 500; color: var(--faint); font-variant-numeric: tabular-nums; }
+.hlist { list-style: none; margin: 0; padding: 0; }
+.hlist a { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding: 9px 0; text-decoration: none; }
+.hlist .t { flex: 1; min-width: 0; font-size: 16.5px; line-height: 1.5; font-weight: 550; color: var(--head); letter-spacing: -.01em; transition: color .15s; }
+.hlist a:hover .t { color: var(--accent); }
+.hlist time { flex: none; font-size: 13.5px; color: var(--faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 640px) {
+  .hlist a { gap: 14px; padding: 8px 0; }
+  .hlist .t { font-size: 16px; }
+  .hlist time { font-size: 12.5px; }
+}
 .sec-h { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 8px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
 .sec-h h2 { margin: 0; font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: .01em; }
 .sec-h a { font-size: 13px; color: var(--faint); text-decoration: none; }

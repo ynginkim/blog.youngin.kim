@@ -2,6 +2,7 @@
 title: "GitHub 사용자 이름을 ynginkim으로 바꾼 이유"
 date: "2026-08-20"
 category: "note"
+group: "retro"
 tags: ["회고", "커리어", "GitHub"]
 summary: "GitHub username 하나 바꾸는 데 30분이 걸렸다. 흔한 이름 탓에 이리저리 조합하다 나온 게 ynginkim이다."
 draft: false

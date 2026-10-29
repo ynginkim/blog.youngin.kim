@@ -2,6 +2,7 @@
 title: "대화에서 오케스트레이션으로"
 date: "2026-08-27"
 category: "note"
+group: "ai"
 tags: ["AI에이전트", "컨텍스트"]
 summary: "하나의 채팅을 길게 잇기보다, 맥락을 나눴다가 다시 모으는 작업 구조가 중요해진다."
 draft: false
