@@ -26,5 +26,9 @@ export default {
       title: 'AI-native note',
       description: 'AI 시대에 지식 습득의 병목이 어디로 옮겨 갔는지 살피고, 그 병목을 다루는 노트가 어떤 모습이어야 하는지 묻는 연재.',
     },
+    'monthly-retro': {
+      title: '월간 회고',
+      description: '매달 남긴 메모를 한두 줄씩 돌아보는 회고.',
+    },
   },
 };
