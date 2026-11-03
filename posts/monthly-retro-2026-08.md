@@ -2,8 +2,7 @@
 title: "2026년 8월 회고"
 date: "2026-08-31"
 category: "note"
-group: "monthly"
-tags: ["회고", "월간 회고", "강의", "오케스트레이션"]
+tags: ["월간 회고", "강의", "오케스트레이션"]
 summary: "말과 장표의 역할, 하나의 채팅에서 여러 맥락으로."
 series: "monthly-retro"
 part: 7

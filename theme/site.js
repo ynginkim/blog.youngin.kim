@@ -26,35 +26,19 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shell.classList.remove('nav-open'); });
   }
 
-  // 글 탭: 주소의 #분류로 들어오면 그 분류를 연다 · 검색 · 모두 펼치기/접기
-  const archive = document.querySelector('.archive');
+  // 글 탭 검색: 지금 보이는 목록(전체 또는 태그) 안에서 제목·태그로 거른다
+  const archive = document.querySelector('ul.archive');
   if (archive) {
-    const groups = [...archive.querySelectorAll('details.arch')];
-    const openHash = () => { const d = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (d && d.matches('details.arch')) { d.open = true; d.scrollIntoView({ block: 'start' }); } };
-    openHash(); addEventListener('hashchange', openHash);
     const tools = document.querySelector('.arch-tools');
     const q = tools.querySelector('.arch-q');
-    const all = tools.querySelector('.arch-all');
     const empty = document.querySelector('.arch-empty');
+    const items = [...archive.querySelectorAll('li[data-k]')];
     tools.hidden = false;
-    let saved = null; // 검색 전 열림 상태
-    const sync = () => { const open = groups.every((d) => d.open); all.textContent = open ? '모두 접기' : '모두 펼치기'; all.setAttribute('aria-pressed', String(open)); };
-    groups.forEach((d) => d.addEventListener('toggle', sync));
-    all.addEventListener('click', () => { const open = !groups.every((d) => d.open); groups.forEach((d) => { d.open = open; }); sync(); });
     q.addEventListener('input', () => {
       const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      if (words.length && !saved) saved = groups.map((d) => d.open);
       let hits = 0;
-      groups.forEach((d, i) => {
-        let n = 0;
-        d.querySelectorAll('li[data-k]').forEach((li) => { const ok = words.every((w) => li.dataset.k.includes(w)); li.hidden = !ok; if (ok) n++; });
-        d.hidden = words.length > 0 && n === 0;
-        if (words.length) d.open = n > 0; else if (saved) d.open = saved[i];
-        hits += n;
-      });
-      if (!words.length) saved = null;
-      empty.hidden = !(words.length && hits === 0);
-      sync();
+      items.forEach((li) => { const ok = words.every((w) => li.dataset.k.includes(w)); li.hidden = !ok; if (ok) hits++; });
+      empty.hidden = hits > 0;
     });
   }
 

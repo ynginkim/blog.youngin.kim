@@ -11,15 +11,8 @@ export default {
     essay: { name: '에세이', color: 1 },
     note: { name: '노트', color: 2 },
   },
-  // 홈 묶음: 글 frontmatter의 group 값 → 홈에서 보이는 묶음 이름. 적힌 순서대로 홈에 나온다.
-  // '글' 탭(/posts/)은 이 묶음 순서대로 접히는 목록을 만든다. group이 없거나 여기에 없는 글은 맨 아래 '그 밖의 글'로 모인다.
-  // 홈은 '중요한 글'(frontmatter featured: true)과 '최근 글'만 보여 주고, 월간 회고(monthly)는 홈 목록에서 뺀다.
-  groups: {
-    ai: { name: 'AI와 일하기' },
-    learning: { name: '배움과 지식' },
-    retro: { name: '회고' },
-    monthly: { name: '월간 회고' },
-  },
+  // 홈은 '중요한 글'(frontmatter featured: true)과 '최근 글'(월간 회고 제외)만 보여 준다.
+  // '글' 탭은 모든 글을 시간순으로 보여 주고, 태그(frontmatter tags)로 거른다.
   // 화면 틀: 'sidebar'(왼쪽 사이드바) · 'topnav'(상단 메뉴) · 'hybrid'(상단 메뉴 + 넓은 화면에서만 사이드바)
   layout: 'topnav',
   // 연재: 글 frontmatter에 series: <아이디>, part: <번호>를 적는다.
