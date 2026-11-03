@@ -19,7 +19,7 @@ layout: links
 - [AI 리드가 말하는 스타트업의 생존 전략 (초대석 2부)](https://youtu.be/YPUC9eeVPRo) <span class="meta">· 윤혜식TV · 2025.11</span>
 - [AI 업계, 어떤 사람이 채용될까? (취잘알 EP.9)](https://youtu.be/m_jDmaFb0KQ) <span class="meta">· 윤혜식TV · 2026.01</span>
 
-## Education
+## Teaching / Mentoring
 
 - 2026 동국대학교 AI Literacy 온라인 강좌
 - 2025–2026 코드잇 스프린트 AI 엔지니어 6기 멘토
