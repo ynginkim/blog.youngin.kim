@@ -1,9 +1,8 @@
 ---
 title: "부끄러워도 글쓰기"
 date: "2026-02-28"
-home: "record"
 category: "note"
-tags: ["글과 말", "일상"]
+tags: ["기록"]
 summary: "글로 생각을 전하는 게 겁나고 귀찮던 내가 요즘 글을 점점 더 많이 쓰게 된 이유."
 draft: false
 ---

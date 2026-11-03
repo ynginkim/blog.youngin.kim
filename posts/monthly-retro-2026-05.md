@@ -2,7 +2,7 @@
 title: "2026년 5월 회고"
 date: "2026-05-31"
 category: "note"
-tags: ["월간 회고"]
+tags: ["기록"]
 summary: "에이전트 인터페이스, AX 전환 작업, 글쓰기, 대구 에이전트 모임."
 series: "monthly-retro"
 part: 4

@@ -66,8 +66,6 @@ function load(dir) {
   });
 }
 const seriesConf = site.series ?? {};
-// 홈의 세 꼭지: [frontmatter home 값, 제목]
-const homeSections = [['ai', 'AI와 일하는 사람'], ['learn', '배우는 사람'], ['record', '기록하는 사람']];
 const posts = load('posts').map(({ file, slug, data, content }) => {
   const fail = (m) => { throw new Error(`${file}: ${m}`); };
   if (!data.title) fail('title이 없다');
@@ -77,11 +75,9 @@ const posts = load('posts').map(({ file, slug, data, content }) => {
   const series = data.series ? String(data.series) : null;
   if (series && !seriesConf[series]) fail(`series '${series}'가 site.config.mjs의 series에 없다`);
   if (series && !Number.isInteger(data.part)) fail('series가 있으면 part(1, 2, …)도 적는다');
-  if (data.featured !== undefined) fail('featured는 없앴다. 홈에 올릴 글은 home: ai|learn|record');
-  if (data.home && !homeSections.some(([k]) => k === String(data.home))) fail(`home은 ${homeSections.map(([k]) => k).join('|')} 중 하나 (${data.home})`);
   const tags = (Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : []).map(String);
   return { slug, title: String(data.title), short: data.short ? String(data.short) : String(data.title), date, category, tags, series, part: series ? data.part : null,
-    summary: data.summary ? String(data.summary) : '', home: data.home ? String(data.home) : null, order: Number(data.order ?? 0), draft: data.draft === true, content,
+    summary: data.summary ? String(data.summary) : '', order: Number(data.order ?? 0), draft: data.draft === true, content,
     url: `/posts/${slug}/`, minutes: Math.max(1, Math.round(content.replace(/<!--\s*toggle:[\s\S]*?<!--\s*\/toggle\s*-->/g, '').replace(/\s/g, '').length / 500)) };
 }).filter((p) => withDrafts || !p.draft)
   .sort((a, b) => b.date.localeCompare(a.date) || b.order - a.order || a.slug.localeCompare(b.slug)); // 최신 글 먼저. 같은 날은 order가 큰 글이 나중 글
@@ -95,6 +91,7 @@ const series = Object.entries(seriesConf).map(([id, s]) => {
 const seriesOf = (p) => series.find((s) => s.id === p.series);
 
 const tagSlug = (t) => t.trim().toLowerCase().replace(/\s+/g, '-');
+const tagUrl = (t) => `/posts/tags/${encodeURIComponent(tagSlug(t))}/`;
 const tagCounts = new Map(); for (const p of posts) for (const t of p.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
 const allTags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([t]) => t);
 const catName = (c) => site.categories[c].name;
@@ -138,15 +135,15 @@ fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
 const dotDate = (d) => d.replaceAll('-', '.');
 const row = (p, k = false) => `<li${k ? ` data-k="${esc([p.title, ...p.tags].join(' ').toLowerCase())}"` : ''}><a href="${p.url}"><span class="t">${esc(p.title)}</span><time datetime="${p.date}">${dotDate(p.date)}${p.draft ? ' · 초안' : ''}</time></a></li>`;
 
-// 홈: 나를 보여 주는 진입로. 소개 한 줄 + 세 꼭지(frontmatter home: ai|learn|record, 꼭지마다 1~3편) + 최근 글(꼭지 글·월간 회고 제외).
+// 홈: 나를 보여 주는 진입로. 소개 한 줄 + 세 꼭지 링크(site.homeLinks, 글 탭의 태그 목록으로) + 최근 글(월간 회고 제외).
 {
-  const sec = (id, h, list) => (list.length ? `<section class="hgroup" aria-labelledby="h-${id}"><h2 id="h-${id}">${h}</h2><ul class="hlist">${list.map((p) => row(p)).join('')}</ul></section>` : '');
-  const recent = posts.filter((p) => !p.home && p.series !== 'monthly-retro').slice(0, 5);
+  for (const [, t] of site.homeLinks) if (!tagCounts.has(t)) throw new Error(`site.homeLinks의 태그 '${t}'를 단 글이 없다`);
+  const recent = posts.filter((p) => p.series !== 'monthly-retro').slice(0, 5);
   emit('/', {
     title: site.title, lastmod: posts[0]?.date,
     body: `<header class="home-head"><h1 class="home-name">${esc(site.author)}</h1><p class="intro">${esc(site.description)}</p></header>
-${homeSections.map(([k, h]) => sec(k, h, posts.filter((p) => p.home === k).slice(0, 3))).join('\n')}
-${sec('recent', '최근 글', recent)}`,
+<nav class="home-links" aria-label="꼭지"><ul>${site.homeLinks.map(([label, t]) => `<li><a href="${tagUrl(t)}">${esc(label)}</a></li>`).join('')}</ul></nav>
+<section class="hgroup" aria-labelledby="h-recent"><h2 id="h-recent">최근 글</h2><ul class="hlist">${recent.map((p) => row(p)).join('')}</ul></section>`,
   });
 }
 
@@ -156,7 +153,6 @@ const redirect = (from, to, label) => emit(from, { title: label, sitemap: false,
 
 // 글 탭: 전체 글을 시간순(최신 먼저) 한 목록으로. 태그를 고르면 같은 틀에서 그 태그 글만 보여 준다.
 // 태그마다 정적 페이지(/posts/tags/<태그>/)를 만들어 JS 없이도 동작한다. 검색은 JS가 있을 때만 보이며 지금 목록 안에서 거른다.
-const tagUrl = (t) => `/posts/tags/${encodeURIComponent(tagSlug(t))}/`;
 {
   const tagLink = (t, active) => `<a href="${tagUrl(t)}"${t === active ? ' aria-current="page"' : ''}>${esc(t)}<span class="n">${tagCounts.get(t)}</span></a>`;
   const archive = (active) => {
