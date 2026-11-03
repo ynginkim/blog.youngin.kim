@@ -170,12 +170,7 @@ main { display: block; min-height: 60vh; }
 .home-head .intro { margin: 0; }
 .home-links { margin: 0 0 48px; }
 .home-links ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.home-links a { font-size: 17px; font-weight: 500; color: #0645AD; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-.home-links a:visited { color: #5A3696; }
-.home-links a:hover { color: #0B0080; text-decoration-thickness: 2px; }
-:root[data-theme="dark"] .home-links a { color: #8AB4F8; }
-:root[data-theme="dark"] .home-links a:visited { color: #C58AF9; }
-:root[data-theme="dark"] .home-links a:hover { color: #AECBFA; }
+.home-links a { font-size: 17px; font-weight: 500; }
 .more { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 /* 글 탭: 검색 · 태그 줄 · 시간순 목록 */
 .arch-tools { margin: -16px 0 18px; }
@@ -229,6 +224,13 @@ a.kicker:hover { color: var(--accent); }
 .prose strong { font-weight: 650; color: var(--head); }
 .prose a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); }
 .prose a:hover { text-decoration-color: currentColor; }
+/* 파란 링크: 홈 꼭지 링크와 본문에서 다른 글로 가는 링크 */
+a.link, .prose a.link { color: #0645AD; text-decoration: underline; text-decoration-color: currentColor; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a.link:visited, .prose a.link:visited { color: #5A3696; }
+a.link:hover, .prose a.link:hover { color: #0B0080; text-decoration-thickness: 2px; }
+:root[data-theme="dark"] a.link { color: #8AB4F8; }
+:root[data-theme="dark"] a.link:visited { color: #C58AF9; }
+:root[data-theme="dark"] a.link:hover { color: #AECBFA; }
 .prose ul, .prose ol { margin: 0 0 var(--gap); padding-left: 1.4em; }
 .prose li { margin: .45em 0; padding-left: .2em; }
 .prose li::marker { color: var(--faint); }

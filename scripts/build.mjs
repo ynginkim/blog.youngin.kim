@@ -31,6 +31,12 @@ function mdToHtml(src) {
   const md = new Marked({ gfm: true });
   md.use({
     renderer: {
+      // 본문에서 다른 글로 가는 링크는 홈 꼭지 링크와 같은 파란 링크(.link)로 보인다.
+      link({ href, title, tokens }) {
+        const text = this.parser.parseInline(tokens);
+        const internal = /^\/posts\/(?!tags\/)/.test(href);
+        return `<a${internal ? ' class="link"' : ''} href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}>${text}</a>`;
+      },
       heading({ tokens, depth, text }) {
         const base = slugify(text); const n = used.get(base) ?? 0; used.set(base, n + 1);
         const id = n ? `${base}-${n}` : base;
@@ -142,7 +148,7 @@ const row = (p, k = false) => `<li${k ? ` data-k="${esc([p.title, ...p.tags].joi
   emit('/', {
     title: site.title, lastmod: posts[0]?.date,
     body: `<header class="home-head"><h1 class="home-name">${esc(site.author)}</h1><p class="intro">${esc(site.description)}</p></header>
-<nav class="home-links" aria-label="꼭지"><ul>${site.homeLinks.map(([label, t]) => `<li><a href="${tagUrl(t)}">${esc(label)}</a></li>`).join('')}</ul></nav>
+<nav class="home-links" aria-label="꼭지"><ul>${site.homeLinks.map(([label, t]) => `<li><a class="link" href="${tagUrl(t)}">${esc(label)}</a></li>`).join('')}</ul></nav>
 <section class="hgroup" aria-labelledby="h-recent"><h2 id="h-recent">최근 글</h2><ul class="hlist">${recent.map((p) => row(p)).join('')}</ul></section>`,
   });
 }
