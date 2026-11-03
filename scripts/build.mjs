@@ -109,6 +109,9 @@ const WORDMARKS = {
   fredoka: { family: 'Fredoka', weight: 600, size: '20px', ls: '0' },
   pacifico: { family: 'Pacifico', weight: 400, size: '20px', ls: '.01em' },
   gaegu: { family: 'Gaegu', weight: 700, size: '24px', ls: '0' },
+  dancing: { family: 'Dancing Script', weight: 700, size: '23px', ls: '0' },
+  lobster: { family: 'Lobster', weight: 400, size: '21px', ls: '.01em' },
+  kaushan: { family: 'Kaushan Script', weight: 400, size: '21px', ls: '0' },
 };
 const wmKey = process.env.WORDMARK_FONT || site.wordmark.font, wm = WORDMARKS[wmKey];
 if (!wm) throw new Error(`wordmark.font '${wmKey}'는 없다: ${Object.keys(WORDMARKS).join(', ')}`);
