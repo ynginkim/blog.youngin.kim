@@ -104,16 +104,11 @@ const catName = (c) => site.categories[c].name;
 const krDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${y}년 ${m}월 ${dd}일`; };
 
 // ---------- 출력 ----------
-// 상단 워드마크 글꼴. WORDMARK_FONT 환경 변수로 잠깐 바꿔 볼 수 있다.
+// 상단 워드마크 글꼴. 다른 글꼴을 쓰려면 theme/fonts/에 부분 글꼴을 넣고 여기에 한 줄 더한다.
 const WORDMARKS = {
-  fredoka: { family: 'Fredoka', weight: 600, size: '20px', ls: '0' },
-  pacifico: { family: 'Pacifico', weight: 400, size: '20px', ls: '.01em' },
-  gaegu: { family: 'Gaegu', weight: 700, size: '24px', ls: '0' },
   dancing: { family: 'Dancing Script', weight: 700, size: '23px', ls: '0' },
-  lobster: { family: 'Lobster', weight: 400, size: '21px', ls: '.01em' },
-  kaushan: { family: 'Kaushan Script', weight: 400, size: '21px', ls: '0' },
 };
-const wmKey = process.env.WORDMARK_FONT || site.wordmark.font, wm = WORDMARKS[wmKey];
+const wmKey = site.wordmark.font, wm = WORDMARKS[wmKey];
 if (!wm) throw new Error(`wordmark.font '${wmKey}'는 없다: ${Object.keys(WORDMARKS).join(', ')}`);
 const wmFont = fs.readFileSync(path.join(ROOT, `theme/fonts/wordmark-${wmKey}.woff2`));
 const wmFile = `/assets/fonts/wordmark-${wmKey}.${crypto.createHash('sha1').update(wmFont).digest('hex').slice(0, 8)}.woff2`;

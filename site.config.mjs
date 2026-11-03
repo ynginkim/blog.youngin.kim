@@ -6,8 +6,8 @@ export default {
   description: '배움과 지식, 그리고 그것을 돕는 도구에 대한 기록',
   lang: 'ko',
   github: 'https://github.com/ynginkim',
-  // 상단 워드마크. font: 'fredoka'(둥근 고딕) | 'gaegu'(손글씨) | 필기체 'pacifico' · 'dancing' · 'lobster' · 'kaushan'. 글꼴 파일은 theme/fonts/ (OFL, 워드마크 글자만 담은 부분 글꼴)
-  wordmark: { text: 'blog.youngin.kim', font: 'fredoka' },
+  // 상단 워드마크: Dancing Script 부분 글꼴(theme/fonts/, OFL)
+  wordmark: { text: 'blog.youngin.kim', font: 'dancing' },
   // 분류: frontmatter의 category 값 → 화면 이름, 색(kit의 --cat-1..8 중 하나)
   categories: {
     essay: { name: '에세이', color: 1 },
