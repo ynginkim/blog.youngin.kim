@@ -2,7 +2,7 @@
 title: "2026년 2월 회고"
 date: "2026-02-28"
 category: "note"
-tags: ["기록"]
+tags: ["기록", "월간 회고"]
 summary: "실시간으로 만들어지는 소프트웨어, 컴퓨팅 사고, 멘토링에서 한 말들."
 series: "monthly-retro"
 part: 1

@@ -2,7 +2,7 @@
 title: "2026년 10월 회고"
 date: "2026-10-31"
 category: "note"
-tags: ["기록"]
+tags: ["기록", "월간 회고"]
 summary: "정보는 빨라졌는데 내 안의 지도는 여전히 천천히 만들어진다."
 series: "monthly-retro"
 part: 9

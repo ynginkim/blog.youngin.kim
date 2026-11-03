@@ -2,7 +2,7 @@
 title: "2026년 9월 회고"
 date: "2026-09-30"
 category: "note"
-tags: ["기록"]
+tags: ["기록", "월간 회고"]
 summary: "에이전트 팀이 구현하고, 나는 설계와 검증과 책임을 맡았다."
 series: "monthly-retro"
 part: 8
