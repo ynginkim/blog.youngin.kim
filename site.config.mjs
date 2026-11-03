@@ -11,7 +11,7 @@ export default {
     essay: { name: '에세이', color: 1 },
     note: { name: '노트', color: 2 },
   },
-  // 홈은 '중요한 글'(frontmatter featured: true)과 '최근 글'(월간 회고 제외)만 보여 준다.
+  // 홈은 세 꼭지(AI와 일하는 사람·배우는 사람·기록하는 사람, frontmatter home: ai|learn|record)와 '최근 글'(꼭지 글·월간 회고 제외)만 보여 준다.
   // '글' 탭은 모든 글을 시간순으로 보여 주고, 태그(frontmatter tags)로 거른다.
   // 예전 태그 → 지금 태그(null이면 글 탭 전체). /tags/<옛 태그>/, /posts/tags/<옛 태그>/ 주소를 넘겨 준다.
   tagRedirects: {

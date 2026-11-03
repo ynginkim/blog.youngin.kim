@@ -66,6 +66,8 @@ function load(dir) {
   });
 }
 const seriesConf = site.series ?? {};
+// 홈의 세 꼭지: [frontmatter home 값, 제목]
+const homeSections = [['ai', 'AI와 일하는 사람'], ['learn', '배우는 사람'], ['record', '기록하는 사람']];
 const posts = load('posts').map(({ file, slug, data, content }) => {
   const fail = (m) => { throw new Error(`${file}: ${m}`); };
   if (!data.title) fail('title이 없다');
@@ -75,9 +77,11 @@ const posts = load('posts').map(({ file, slug, data, content }) => {
   const series = data.series ? String(data.series) : null;
   if (series && !seriesConf[series]) fail(`series '${series}'가 site.config.mjs의 series에 없다`);
   if (series && !Number.isInteger(data.part)) fail('series가 있으면 part(1, 2, …)도 적는다');
+  if (data.featured !== undefined) fail('featured는 없앴다. 홈에 올릴 글은 home: ai|learn|record');
+  if (data.home && !homeSections.some(([k]) => k === String(data.home))) fail(`home은 ${homeSections.map(([k]) => k).join('|')} 중 하나 (${data.home})`);
   const tags = (Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : []).map(String);
   return { slug, title: String(data.title), short: data.short ? String(data.short) : String(data.title), date, category, tags, series, part: series ? data.part : null,
-    summary: data.summary ? String(data.summary) : '', featured: data.featured === true, order: Number(data.order ?? 0), draft: data.draft === true, content,
+    summary: data.summary ? String(data.summary) : '', home: data.home ? String(data.home) : null, order: Number(data.order ?? 0), draft: data.draft === true, content,
     url: `/posts/${slug}/`, minutes: Math.max(1, Math.round(content.replace(/<!--\s*toggle:[\s\S]*?<!--\s*\/toggle\s*-->/g, '').replace(/\s/g, '').length / 500)) };
 }).filter((p) => withDrafts || !p.draft)
   .sort((a, b) => b.date.localeCompare(a.date) || b.order - a.order || a.slug.localeCompare(b.slug)); // 최신 글 먼저. 같은 날은 order가 큰 글이 나중 글
@@ -134,15 +138,14 @@ fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
 const dotDate = (d) => d.replaceAll('-', '.');
 const row = (p, k = false) => `<li${k ? ` data-k="${esc([p.title, ...p.tags].join(' ').toLowerCase())}"` : ''}><a href="${p.url}"><span class="t">${esc(p.title)}</span><time datetime="${p.date}">${dotDate(p.date)}${p.draft ? ' · 초안' : ''}</time></a></li>`;
 
-// 홈: 나를 보여 주는 진입로. 소개 한 줄 + 중요한 글(featured: true) + 최근 글. 월간 회고는 홈에 넣지 않는다.
+// 홈: 나를 보여 주는 진입로. 소개 한 줄 + 세 꼭지(frontmatter home: ai|learn|record, 꼭지마다 1~3편) + 최근 글(꼭지 글·월간 회고 제외).
 {
-  const featured = posts.filter((p) => p.featured);
-  const recent = posts.filter((p) => !p.featured && p.series !== 'monthly-retro').slice(0, 5);
   const sec = (id, h, list) => (list.length ? `<section class="hgroup" aria-labelledby="h-${id}"><h2 id="h-${id}">${h}</h2><ul class="hlist">${list.map((p) => row(p)).join('')}</ul></section>` : '');
+  const recent = posts.filter((p) => !p.home && p.series !== 'monthly-retro').slice(0, 5);
   emit('/', {
     title: site.title, lastmod: posts[0]?.date,
     body: `<header class="home-head"><h1 class="home-name">${esc(site.author)}</h1><p class="intro">${esc(site.description)}</p></header>
-${sec('featured', '중요한 글', featured)}
+${homeSections.map(([k, h]) => sec(k, h, posts.filter((p) => p.home === k).slice(0, 3))).join('\n')}
 ${sec('recent', '최근 글', recent)}`,
   });
 }
