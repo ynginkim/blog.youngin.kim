@@ -25,15 +25,23 @@ function cjkStrong(src) {
   return src.split(/(^```[\s\S]*?^```)/m).map((part, i) => (i % 2 ? part : part.split(/(`[^`\n]*`)/).map((t, j) => (j % 2 ? t
     : t.replace(/\*\*(?=\S)([^*\n]+?)(?<=\S)\*\*/g, '<strong>$1</strong>'))).join(''))).join('');
 }
-function mdToHtml(src) {
+// linkPage: 소개처럼 링크를 모은 페이지. 모든 링크를 파란 링크(.link)로 보이고,
+// 링크 title은 브라우저 기본 말풍선 대신 작은 설명 팁(.tip)으로 바꾼다(호버·키보드 포커스 때 보임).
+function mdToHtml(src, { linkPage = false } = {}) {
   src = cjkStrong(src);
   const used = new Map();
+  let tips = 0;
   const md = new Marked({ gfm: true });
   md.use({
     renderer: {
       // 본문에서 다른 글로 가는 링크는 홈 꼭지 링크와 같은 파란 링크(.link)로 보인다.
       link({ href, title, tokens }) {
         const text = this.parser.parseInline(tokens);
+        if (linkPage) {
+          if (!title) return `<a class="link" href="${esc(href)}">${text}</a>`;
+          const id = `tip-${++tips}`;
+          return `<span class="tipwrap"><a class="link" href="${esc(href)}" aria-describedby="${id}">${text}</a><span class="tip" role="tooltip" id="${id}">${esc(title)}</span></span>`;
+        }
         const internal = /^\/posts\/(?!tags\/)/.test(href);
         return `<a${internal ? ' class="link"' : ''} href="${esc(href)}"${title ? ` title="${esc(title)}"` : ''}>${text}</a>`;
       },
@@ -235,7 +243,7 @@ ${pnav}
 for (const pg of load('pages')) {
   const title = String(pg.data.title ?? pg.slug);
   emit(`/${pg.slug}/`, { title, description: pg.data.description ? String(pg.data.description) : site.description,
-    body: `<h1 class="page-title">${esc(title)}</h1><div class="prose">${mdToHtml(pg.content)}</div>` });
+    body: `<h1 class="page-title">${esc(title)}</h1>${pg.data.layout === 'links' ? `<div class="prose linkpage">${mdToHtml(pg.content, { linkPage: true })}</div>` : `<div class="prose">${mdToHtml(pg.content)}</div>`}` });
 }
 
 // 404

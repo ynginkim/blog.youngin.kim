@@ -232,6 +232,21 @@ a.link:hover, .prose a.link:hover { color: #0B0080; text-decoration-thickness: 2
 :root[data-theme="dark"] a.link { color: #8AB4F8; }
 :root[data-theme="dark"] a.link:visited { color: #C58AF9; }
 :root[data-theme="dark"] a.link:hover { color: #AECBFA; }
+/* 링크 모음 페이지(소개, layout: links): 홈처럼 작은 회색 소제목 + 파란 링크 목록 */
+.prose.linkpage h2 { margin: 44px 0 6px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 600; line-height: 1.5; letter-spacing: .01em; color: var(--muted); }
+.prose.linkpage > h2:first-child { margin-top: 8px; }
+.linkpage ul { margin: 0; padding-left: 1.2em; }
+.linkpage ul ul { margin: 2px 0 4px; }
+.linkpage li { margin: .5em 0; }
+.linkpage .meta { color: var(--faint); font-size: 13.5px; white-space: nowrap; }
+/* 설명 팁: 호버·키보드 포커스 때 링크 아래에 작게. 호버가 없는 기기(터치)에서는 링크 옆 회색 글로 늘 보인다. */
+.tipwrap { position: relative; }
+.tip { position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%); z-index: 5; width: max-content; max-width: 340px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--muted); font-size: 12.5px; line-height: 1.5; font-weight: 400; white-space: normal; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .12s; }
+.tipwrap:hover .tip, .tipwrap a:focus-visible + .tip { opacity: 1; visibility: visible; }
+@media (hover: hover) and (max-width: 640px) { .tip { left: 0; top: calc(100% + 4px); transform: none; max-width: min(340px, 80vw); } }
+@media (hover: none) {
+  .tip { position: static; display: block; transform: none; width: auto; max-width: none; margin: 2px 0 0; padding: 0; border: 0; background: none; font-size: 13px; color: var(--faint); opacity: 1; visibility: visible; }
+}
 .prose ul, .prose ol { margin: 0 0 var(--gap); padding-left: 1.4em; }
 .prose li { margin: .45em 0; padding-left: .2em; }
 .prose li::marker { color: var(--faint); }
