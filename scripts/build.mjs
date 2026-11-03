@@ -147,19 +147,20 @@ ${sec('recent', '최근 글', recent)}`,
   });
 }
 
+// 옛 주소를 새 주소로 넘기는 작은 페이지(검색엔진에는 올리지 않음)
+const redirect = (from, to, label) => emit(from, { title: label, sitemap: false,
+  body: `<meta http-equiv="refresh" content="0; url=${to}"><link rel="canonical" href="${to}"><p class="page-desc"><a href="${to}">${esc(label)} 글 목록으로 이동</a></p>` });
+
 // 글 탭: 전체 글을 시간순(최신 먼저) 한 목록으로. 태그를 고르면 같은 틀에서 그 태그 글만 보여 준다.
 // 태그마다 정적 페이지(/posts/tags/<태그>/)를 만들어 JS 없이도 동작한다. 검색은 JS가 있을 때만 보이며 지금 목록 안에서 거른다.
 const tagUrl = (t) => `/posts/tags/${encodeURIComponent(tagSlug(t))}/`;
 {
-  const MAIN_MIN = 2; // 글이 이만큼 이상인 태그는 바로 보이고, 나머지는 '태그 더 보기' 안에 둔다
-  const main = allTags.filter((t) => tagCounts.get(t) >= MAIN_MIN), rest = allTags.filter((t) => tagCounts.get(t) < MAIN_MIN);
   const tagLink = (t, active) => `<a href="${tagUrl(t)}"${t === active ? ' aria-current="page"' : ''}>${esc(t)}<span class="n">${tagCounts.get(t)}</span></a>`;
   const archive = (active) => {
     const list = active ? posts.filter((p) => p.tags.includes(active)) : posts;
-    const more = rest.length ? `<details class="tag-more"${rest.includes(active) ? ' open' : ''}><summary>태그 더 보기 <span class="n">${rest.length}</span></summary><div class="tag-row">${rest.map((t) => tagLink(t, active)).join('')}</div></details>` : '';
     return `<h1 class="page-title">글</h1><p class="page-desc">${active ? `#${esc(active)} · ${list.length}편` : `모두 ${list.length}편`}</p>
 <div class="arch-tools" hidden><input class="arch-q" type="search" placeholder="제목·태그로 찾기" aria-label="글 찾기" autocomplete="off"></div>
-<nav class="tagbar" aria-label="태그"><div class="tag-row"><a href="/posts/"${active ? '' : ' aria-current="page"'}>전체<span class="n">${posts.length}</span></a>${main.map((t) => tagLink(t, active)).join('')}</div>${more}</nav>
+<nav class="tagbar" aria-label="태그"><div class="tag-row"><a href="/posts/"${active ? '' : ' aria-current="page"'}>전체<span class="n">${posts.length}</span></a>${allTags.map((t) => tagLink(t, active)).join('')}</div></nav>
 <p class="arch-empty" role="status" hidden>찾는 글이 없습니다.</p>
 <ul class="hlist archive">${list.map((p) => row(p, true)).join('')}</ul>`;
   };
@@ -167,11 +168,19 @@ const tagUrl = (t) => `/posts/tags/${encodeURIComponent(tagSlug(t))}/`;
   for (const t of allTags) {
     const list = posts.filter((p) => p.tags.includes(t));
     emit(`/posts/tags/${tagSlug(t)}/`, { title: `#${t}`, description: `#${t} 태그가 붙은 글`, lastmod: list[0].date, body: archive(t) });
-    // 예전 주소(/tags/<태그>/)는 새 주소로 넘긴다
-    const to = tagUrl(t);
-    emit(`/tags/${tagSlug(t)}/`, { title: `#${t}`, sitemap: false, body: `<meta http-equiv="refresh" content="0; url=${to}"><p class="page-desc"><a href="${to}">#${esc(t)} 글 목록으로 이동</a></p>` });
+    redirect(`/tags/${tagSlug(t)}/`, tagUrl(t), `#${t}`);
+
   }
 }
+
+// 예전 태그·분류 주소
+for (const [old, now] of Object.entries(site.tagRedirects ?? {})) {
+  if (tagCounts.has(old)) continue;
+  const to = now && tagCounts.has(now) ? tagUrl(now) : '/posts/', label = now && tagCounts.has(now) ? `#${now}` : '전체';
+  redirect(`/tags/${tagSlug(old)}/`, to, label);
+  redirect(`/posts/tags/${tagSlug(old)}/`, to, label);
+}
+for (const c of Object.keys(site.categories)) redirect(`/category/${c}/`, '/posts/', '전체');
 
 // 연재 전용 페이지는 두지 않는다. 연재는 글 제목 옆 라벨과 글 안의 연재 상자로만 보인다.
 

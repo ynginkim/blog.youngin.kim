@@ -4,7 +4,7 @@ short: "AI에게 일을 맡기는 나"
 date: "2026-10-21"
 featured: true
 category: "essay"
-tags: ["AI와 일하기", "에이전트", "회고", "질문"]
+tags: ["AI와 일하기", "에이전트", "커리어"]
 summary: "AI가 일할 구조와 트리거, 검증을 설계하는 시간이 늘면서 내 직업적 정체성을 다시 묻게 됐다."
 draft: false
 ---

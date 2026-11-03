@@ -2,11 +2,11 @@
 title: "2026년 2월 회고"
 date: "2026-02-28"
 category: "note"
-tags: ["월간 회고", "AI시대", "컴퓨팅 사고"]
+tags: ["월간 회고"]
 summary: "실시간으로 만들어지는 소프트웨어, 컴퓨팅 사고, 멘토링에서 한 말들."
 series: "monthly-retro"
 part: 1
-draft: true
+
 ---
 
 2월에 남긴 메모를 한두 줄씩 돌아본다.

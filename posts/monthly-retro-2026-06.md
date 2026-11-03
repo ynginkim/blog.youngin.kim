@@ -2,11 +2,11 @@
 title: "2026년 6월 회고"
 date: "2026-06-30"
 category: "note"
-tags: ["월간 회고", "에이전트", "오케스트레이션"]
+tags: ["월간 회고"]
 summary: "문제 해결 단위로 다시 짜이는 직무, 기본 업무 앱이 되는 코딩 에이전트, GPT 말투."
 series: "monthly-retro"
 part: 5
-draft: true
+
 ---
 
 6월에 남긴 메모를 한두 줄씩 돌아본다.

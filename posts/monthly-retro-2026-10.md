@@ -2,11 +2,11 @@
 title: "2026년 10월 회고"
 date: "2026-10-31"
 category: "note"
-tags: ["월간 회고", "학습", "멘탈 모델", "교육"]
+tags: ["월간 회고"]
 summary: "정보는 빨라졌는데 내 안의 지도는 여전히 천천히 만들어진다."
 series: "monthly-retro"
 part: 9
-draft: true
+
 ---
 
 10월에 남긴 메모를 한두 줄씩 돌아본다.

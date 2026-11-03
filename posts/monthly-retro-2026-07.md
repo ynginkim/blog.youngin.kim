@@ -2,11 +2,11 @@
 title: "2026년 7월 회고"
 date: "2026-07-31"
 category: "note"
-tags: ["월간 회고", "보험", "현장"]
+tags: ["월간 회고"]
 summary: "보험 현장에서 본 AI, 대화와 실행이 한 앱에 모이는 흐름."
 series: "monthly-retro"
 part: 6
-draft: true
+
 ---
 
 7월에 남긴 메모를 한두 줄씩 돌아본다.

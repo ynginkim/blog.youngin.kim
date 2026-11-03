@@ -2,11 +2,11 @@
 title: "2026년 4월 회고"
 date: "2026-04-30"
 category: "note"
-tags: ["월간 회고", "에이전트", "로컬리티"]
+tags: ["월간 회고"]
 summary: "흔들리는 해자, 채팅창 밖의 에이전트, 대구와 로컬리티, AI slop."
 series: "monthly-retro"
 part: 3
-draft: true
+
 ---
 
 4월에 남긴 메모를 한두 줄씩 돌아본다.

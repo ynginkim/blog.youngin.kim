@@ -2,11 +2,11 @@
 title: "2026년 3월 회고"
 date: "2026-03-31"
 category: "note"
-tags: ["월간 회고", "클로드 코드", "글쓰기"]
+tags: ["월간 회고"]
 summary: "비개발자에게 클로드 코드 가르치기, 노트북 없는 출장, 겁과 부끄러움."
 series: "monthly-retro"
 part: 2
-draft: true
+
 ---
 
 3월에 남긴 메모를 한두 줄씩 돌아본다.

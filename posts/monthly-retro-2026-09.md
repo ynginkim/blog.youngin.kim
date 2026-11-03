@@ -2,11 +2,11 @@
 title: "2026년 9월 회고"
 date: "2026-09-30"
 category: "note"
-tags: ["월간 회고", "에이전트", "책임"]
+tags: ["월간 회고"]
 summary: "에이전트 팀이 구현하고, 나는 설계와 검증과 책임을 맡았다."
 series: "monthly-retro"
 part: 8
-draft: true
+
 ---
 
 9월에 남긴 메모를 한두 줄씩 돌아본다.
