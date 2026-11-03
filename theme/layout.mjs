@@ -15,12 +15,15 @@ const themeBtn = () => `<button class="icon-btn theme-btn" type="button" aria-la
 // 첫 페인트 전에 테마·사이드바 상태를 적용해 깜빡임을 막는다. 기본은 라이트.
 const BOOT = `<script>(function(){try{var d=document.documentElement;if(localStorage.getItem('theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('sb')==='0')d.classList.add('sb-collapsed')}catch(e){}})()</script>`;
 
-export function createLayout({ site, layout, nav, series, posts, assetVersion }) {
+// 워드마크: 점만 강조색
+const wordmark = (text) => text.split('.').map(esc).join('<span class="wm-dot">.</span>');
+
+export function createLayout({ site, layout, nav, series, posts, assetVersion, wmFile }) {
   const isCur = (href, cur) => (href === '/' ? cur === '/' : cur.startsWith(href));
   const navLinks = (cur) => nav.map(([href, label]) => `<a href="${href}"${isCur(href, cur) ? ' aria-current="page"' : ''}>${esc(label)}</a>`).join('');
 
   const topnav = (cur) => `<header class="topnav"><div class="col topnav-in">
-  <a class="brand" href="/">${esc(site.author)}</a>
+  <a class="brand wm" href="/" title="홈">${wordmark(site.wordmark.text)}</a>
   <nav class="nav" aria-label="주 메뉴">${navLinks(cur)}${themeBtn()}</nav>
 </div></header>`;
 
@@ -32,7 +35,7 @@ export function createLayout({ site, layout, nav, series, posts, assetVersion })
     const solo = posts.filter((p) => !p.series).slice(0, 8);
     const postsHtml = solo.length ? `<div class="sb-sec"><div class="sb-label">최근 글</div>${solo.map((p) => `<a href="${p.url}"${cur1(p.url)}>${esc(p.short)}</a>`).join('')}</div>` : '';
     return `<aside class="sidebar" aria-label="사이트 탐색">
-  <div class="sb-top"><a class="brand" href="/">${esc(site.author)}</a><button class="icon-btn sb-collapse" type="button" aria-label="사이드바 접기" title="사이드바 접기">${ICON.panel}</button></div>
+  <div class="sb-top"><a class="brand wm" href="/" title="홈">${wordmark(site.wordmark.text)}</a><button class="icon-btn sb-collapse" type="button" aria-label="사이드바 접기" title="사이드바 접기">${ICON.panel}</button></div>
   <nav class="sb-sec sb-nav" aria-label="주 메뉴">${nav.map(([href, label]) => `<a href="${href}"${isCur(href, cur) ? ' aria-current="page"' : ''}>${esc(label)}</a>`).join('')}</nav>
   ${seriesHtml}
   ${postsHtml}
@@ -51,7 +54,7 @@ ${sidebar(url)}
 <div class="scrim"></div>
 <button class="icon-btn sb-open" type="button" aria-label="사이드바 펼치기" title="사이드바 펼치기">${ICON.panel}</button>
 <div class="page">
-<div class="mbar"><button class="icon-btn menu-btn" type="button" aria-label="메뉴 열기">${ICON.menu}</button><a class="brand" href="/">${esc(site.author)}</a>${themeBtn()}</div>
+<div class="mbar"><button class="icon-btn menu-btn" type="button" aria-label="메뉴 열기">${ICON.menu}</button><a class="brand wm" href="/" title="홈">${wordmark(site.wordmark.text)}</a>${themeBtn()}</div>
 <main id="main" class="col">${body}${footer()}</main>
 </div>`,
       topnav: `<a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -72,6 +75,7 @@ ${sidebar(url)}
 ${BOOT}
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preload" href="${wmFile}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/style.css?v=${assetVersion}">
 ${head}
 </head>

@@ -93,6 +93,7 @@ main { display: block; min-height: 60vh; }
 .sidebar::-webkit-scrollbar { display: none; }
 .sb-top { display: flex; align-items: center; justify-content: space-between; min-height: 32px; }
 .sb-top .brand { font-size: 16px; }
+.brand .wm-dot { color: var(--accent); }
 .sb-sec { display: flex; flex-direction: column; gap: 1px; }
 .sb-label { font-size: 12px; letter-spacing: .02em; color: var(--faint); margin: 0 0 6px; }
 .sb-sec a { color: var(--muted); text-decoration: none; padding: 3px 0; display: block; transition: color .15s; }

@@ -104,11 +104,24 @@ const catName = (c) => site.categories[c].name;
 const krDate = (d) => { const [y, m, dd] = d.split('-').map(Number); return `${y}년 ${m}월 ${dd}일`; };
 
 // ---------- 출력 ----------
-const css = fs.readFileSync(path.join(ROOT, 'theme/style.css'), 'utf8');
+// 상단 워드마크 글꼴. WORDMARK_FONT 환경 변수로 잠깐 바꿔 볼 수 있다.
+const WORDMARKS = {
+  fredoka: { family: 'Fredoka', weight: 600, size: '20px', ls: '0' },
+  pacifico: { family: 'Pacifico', weight: 400, size: '20px', ls: '.01em' },
+  gaegu: { family: 'Gaegu', weight: 700, size: '24px', ls: '0' },
+};
+const wmKey = process.env.WORDMARK_FONT || site.wordmark.font, wm = WORDMARKS[wmKey];
+if (!wm) throw new Error(`wordmark.font '${wmKey}'는 없다: ${Object.keys(WORDMARKS).join(', ')}`);
+const wmFont = fs.readFileSync(path.join(ROOT, `theme/fonts/wordmark-${wmKey}.woff2`));
+const wmFile = `/assets/fonts/wordmark-${wmKey}.${crypto.createHash('sha1').update(wmFont).digest('hex').slice(0, 8)}.woff2`;
+const css = fs.readFileSync(path.join(ROOT, 'theme/style.css'), 'utf8') + `
+@font-face { font-family: "${wm.family} Wordmark"; src: url("${wmFile}") format("woff2"); font-weight: ${wm.weight}; font-display: swap; }
+.wm { font-family: "${wm.family} Wordmark", ui-rounded, system-ui, sans-serif; font-weight: ${wm.weight}; font-size: ${wm.size}; letter-spacing: ${wm.ls}; }
+`;
 const js = fs.readFileSync(path.join(ROOT, 'theme/site.js'), 'utf8');
 const assetVersion = crypto.createHash('sha1').update(css + js).digest('hex').slice(0, 8);
 const nav = site.nav ?? [['/posts/', '글'], ['/about/', '소개']];
-const render = createLayout({ site, layout: LAYOUT, nav, series, posts, assetVersion });
+const render = createLayout({ site, layout: LAYOUT, nav, series, posts, assetVersion, wmFile });
 
 const pages = []; // sitemap용
 function emit(url, { title, body, description = site.description, type = 'website', fullTitle, sitemap = true, lastmod, toc = false }) {
@@ -135,6 +148,8 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'assets'), { recursive: true });
 fs.cpSync(path.join(ROOT, 'public'), OUT, { recursive: true });
 fs.writeFileSync(path.join(OUT, 'assets/style.css'), css);
+fs.mkdirSync(path.join(OUT, 'assets/fonts'), { recursive: true });
+fs.writeFileSync(path.join(OUT, wmFile), wmFont);
 fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
 
 // 목록 한 줄: 제목 + 작성일만
