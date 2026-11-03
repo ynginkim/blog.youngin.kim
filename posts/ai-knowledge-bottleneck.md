@@ -2,6 +2,7 @@
 title: "AI 시대, 지식 습득의 새로운 병목은 어디에 있는가"
 short: "지식 습득의 새로운 병목"
 date: "2026-10-04"
+featured: true
 category: "essay"
 group: "learning"
 tags: ["AI", "learning", "PKM"]

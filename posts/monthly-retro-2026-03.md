@@ -2,7 +2,7 @@
 title: "2026년 3월 회고"
 date: "2026-03-31"
 category: "note"
-group: "retro"
+group: "monthly"
 tags: ["회고", "월간 회고", "클로드 코드", "글쓰기"]
 summary: "비개발자에게 클로드 코드 가르치기, 노트북 없는 출장, 겁과 부끄러움."
 series: "monthly-retro"

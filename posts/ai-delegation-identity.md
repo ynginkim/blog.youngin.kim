@@ -2,6 +2,7 @@
 title: "AI에게 일을 맡기는 나는 어떤 일을 하는 사람인가"
 short: "AI에게 일을 맡기는 나"
 date: "2026-10-21"
+featured: true
 category: "essay"
 group: "ai"
 tags: ["AI에이전트", "회고", "질문"]

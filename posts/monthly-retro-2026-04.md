@@ -2,7 +2,7 @@
 title: "2026년 4월 회고"
 date: "2026-04-30"
 category: "note"
-group: "retro"
+group: "monthly"
 tags: ["회고", "월간 회고", "에이전트", "로컬리티"]
 summary: "흔들리는 해자, 채팅창 밖의 에이전트, 대구와 로컬리티, AI slop."
 series: "monthly-retro"

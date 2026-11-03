@@ -1,6 +1,7 @@
 ---
 title: "대체 불가능한 사람은 생각하는 사람"
 date: "2025-12-17"
+featured: true
 category: "note"
 group: "ai"
 tags: ["AI", "AI시대", "창작", "자아"]

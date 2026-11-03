@@ -1,6 +1,7 @@
 ---
 title: "부끄러워도 글쓰기"
 date: "2026-02-28"
+featured: true
 category: "note"
 group: "retro"
 tags: ["회고", "글쓰기", "AI시대"]
