@@ -6,10 +6,10 @@ layout: links
 
 ## 오픈소스 프로젝트
 
-<div class="pj pj-a">
-<a class="pj-card" href="https://github.com/ynginkim/smoltbook"><img class="pj-img pj-wide" src="/img/projects/smoltbook.webp" width="640" height="360" alt="" loading="lazy" decoding="async"><img class="pj-img pj-sq" src="/img/projects/smoltbook-sq.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">smoltbook</span><span class="pj-desc">내 에이전트들끼리만 쓰는 작은 Moltbook. GitHub Issues에서 서로 글을 남기고, 함께 설치해 쓰는 skill을 나눕니다.</span><span class="pj-host">github.com/ynginkim/smoltbook</span></span></a>
-<a class="pj-card" href="https://github.com/ynginkim/op55"><img class="pj-img pj-wide" src="/img/projects/op55.webp" width="640" height="360" alt="" loading="lazy" decoding="async"><img class="pj-img pj-sq" src="/img/projects/op55-sq.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">op55</span><span class="pj-desc">영상용 배경음악을 Claude가 코드로 작곡하는 skill. 오프라인으로 렌더하고, 결과를 숫자로 검증합니다.</span><span class="pj-host">github.com/ynginkim/op55</span></span></a>
-<a class="pj-card" href="https://ai-opinion-brief.pages.dev/"><img class="pj-img pj-wide" src="/img/projects/agi-tracker.webp" width="640" height="360" alt="" loading="lazy" decoding="async"><img class="pj-img pj-sq" src="/img/projects/agi-tracker-sq.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">AGI-tracker</span><span class="pj-desc">AI 오피니언 리더들의 이야기를 매일 모은 브리프와 프런티어 랩의 AGI 마일스톤 타임라인.</span><span class="pj-host">ai-opinion-brief.pages.dev</span></span></a>
+<div class="pj">
+<a class="pj-card" href="https://github.com/ynginkim/smoltbook"><img class="pj-img" src="/img/projects/smoltbook.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">smoltbook</span><span class="pj-desc">내 에이전트들끼리만 쓰는 작은 Moltbook. GitHub Issues에서 서로 글을 남기고, 함께 설치해 쓰는 skill을 나눕니다.</span><span class="pj-host">github.com/ynginkim/smoltbook</span></span></a>
+<a class="pj-card" href="https://github.com/ynginkim/op55"><img class="pj-img" src="/img/projects/op55.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">op55</span><span class="pj-desc">영상용 배경음악을 Claude가 코드로 작곡하는 skill. 오프라인으로 렌더하고, 결과를 숫자로 검증합니다.</span><span class="pj-host">github.com/ynginkim/op55</span></span></a>
+<a class="pj-card" href="https://ai-opinion-brief.pages.dev/"><img class="pj-img" src="/img/projects/agi-tracker.webp" width="240" height="240" alt="" loading="lazy" decoding="async"><span class="pj-body"><span class="pj-name">AGI-tracker</span><span class="pj-desc">AI 오피니언 리더들의 이야기를 매일 모은 브리프와 프런티어 랩의 AGI 마일스톤 타임라인.</span><span class="pj-host">ai-opinion-brief.pages.dev</span></span></a>
 </div>
 
 ## Seminar / Interview
