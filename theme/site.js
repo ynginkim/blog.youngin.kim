@@ -1,9 +1,14 @@
-// 테마 토글 · 사이드바 접기 · 목차(오른쪽 대시 레일)
+// 테마 · 사이드바 · 내비 팔레트 · 탭/태그 soft nav · 검색 · 목차
+import {
+  NAV_PAL_KEY, NAV_COLORS, colorById, pickNextColor,
+  isModifiedClick, isSoftNavClickTarget, samePath, canSoftNavigate,
+  planSoftClick, syncNavCurrent,
+} from './soft-nav-logic.mjs';
+
 (() => {
   const root = document.documentElement;
   const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
 
-  // 테마: 기본은 라이트. 고른 값만 기억한다(시스템 설정은 따르지 않음).
   const setTheme = (t) => {
     if (t === 'dark') root.dataset.theme = 'dark'; else delete root.dataset.theme;
     document.querySelectorAll('.theme-btn').forEach((b) => b.setAttribute('aria-pressed', String(t === 'dark')));
@@ -13,7 +18,6 @@
     if (e.target.closest('.theme-btn')) { const t = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('theme', t); setTheme(t); }
   });
 
-  // 사이드바: 넓은 화면에서는 접기/펴기(기억), 좁은 화면에서는 서랍
   const shell = document.querySelector('.l-sidebar');
   if (shell) {
     const narrow = () => matchMedia('(max-width: 1023px)').matches;
@@ -26,105 +30,191 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shell.classList.remove('nav-open'); });
   }
 
-  // 글 탭 검색: 지금 보이는 목록(전체 또는 태그) 안에서 제목·태그로 거른다
-  const archive = document.querySelector('ul.archive');
-  if (archive) {
-    const tools = document.querySelector('.arch-tools');
-    const q = tools.querySelector('.arch-q');
-    const empty = document.querySelector('.arch-empty');
-    const items = [...archive.querySelectorAll('li[data-k]')];
-    tools.hidden = false;
-    q.addEventListener('input', () => {
-      const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-      let hits = 0;
-      items.forEach((li) => { const ok = words.every((w) => li.dataset.k.includes(w)); li.hidden = !ok; if (ok) hits++; });
-      empty.hidden = hits > 0;
-    });
-  }
-
-
-  // 상단 내비(글/소개): 일반 클릭마다 활성 필을 5색 중 다른 색으로. sessionStorage로 페이지 이동 후에도 유지.
-  {
-    const root = document.documentElement;
-    const KEY = 'navPal';
-    const COLORS = [
-      { id: 'cream', bg: '#E3CDB1', fg: '#0E1013' },
-      { id: 'olive', bg: '#7C5C3E', fg: '#FFFFFF' },
-      { id: 'muted', bg: '#726A4D', fg: '#FFFFFF' },
-      { id: 'terra', bg: '#AA5C3C', fg: '#FFFFFF' },
-      { id: 'teal', bg: '#294F4F', fg: '#FFFFFF' },
-    ];
-    const byId = (id) => COLORS.find((c) => c.id === id) || COLORS[0];
-    const read = () => { try { return sessionStorage.getItem(KEY); } catch { return null; } };
-    const write = (id) => { try { sessionStorage.setItem(KEY, id); } catch {} };
-    const apply = (c) => {
-      root.style.setProperty('--nav-pal', c.bg);
-      root.style.setProperty('--nav-pal-fg', c.fg);
-      root.dataset.navPal = c.id;
-    };
-    let cur = byId(read() || 'cream');
-    apply(cur);
-    const sameNav = (a) => {
-      if (a.getAttribute('aria-current') === 'page') return true;
-      try { return new URL(a.href).pathname === location.pathname; } catch { return false; }
-    };
-    document.querySelectorAll('.topnav .nav > a[href]').forEach((a) => {
-      a.addEventListener('click', (e) => {
-        if (e.defaultPrevented || e.button !== 0) return;
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        const others = COLORS.filter((c) => c.id !== cur.id);
-        const next = others[Math.floor(Math.random() * others.length)] || COLORS[0];
-        write(next.id);
-        // 다른 페이지로 갈 때는 나가는 화면의 필 색을 바꾸지 않는다. 도착 페이지 BOOT이 적용.
-        if (sameNav(a)) {
-          e.preventDefault();
-          apply(next);
-          cur = next;
-        }
-      });
-    });
-    // bfcache 복원 시 storage의 색으로 맞춘다.
-    addEventListener('pageshow', () => {
-      cur = byId(read() || 'cream');
-      apply(cur);
-    });
-  }
-
-  // 목차
-  const prose = document.querySelector('.prose');
-  const toc = document.querySelector('.ftoc');
-  if (!prose || !toc) return;
-  // 접힌 블록(부록 등) 안의 제목은 빼고, 접힌 블록 자체를 한 항목으로 넣는다
-  const hs = [...prose.querySelectorAll('h2[id], h3[id], details.fold')].filter((h) => !h.parentElement.closest('details'));
-  if (hs.length < 2) return;
-  const rail = toc.querySelector('.ftoc-rail');
-  const list = toc.querySelector('.ftoc-list');
-  const lines = [], links = [];
-  for (const h of hs) {
-    const fold = h.tagName === 'DETAILS';
-    const lvl = fold ? 'h2' : h.tagName.toLowerCase();
-    if (fold && !h.id) h.id = `fold-${lines.length}`;
-    const line = document.createElement('span'); line.className = `ftoc-line ${lvl}`; rail.appendChild(line); lines.push(line);
-    const a = document.createElement('a'); a.href = `#${h.id}`; a.className = lvl; a.textContent = fold ? h.querySelector('summary').textContent : h.textContent; list.appendChild(a); links.push(a);
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (fold) h.open = true;
-      h.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      history.replaceState(null, '', `#${h.id}`);
-      toc.classList.remove('open');
-    });
-  }
-  document.body.classList.add('has-toc');
-  toc.querySelector('.ftoc-btn').addEventListener('click', (e) => { e.stopPropagation(); toc.classList.toggle('open'); });
-  document.addEventListener('click', (e) => { if (!e.target.closest('.ftoc')) toc.classList.remove('open'); });
-
-  let cur = -1;
-  const spy = () => {
-    let i = -1;
-    hs.forEach((h, j) => { if (h.offsetParent !== null && h.getBoundingClientRect().top <= 120) i = j; });
-    if (i === cur) return; cur = i;
-    lines.forEach((l, j) => l.classList.toggle('on', j === i));
-    links.forEach((l, j) => l.classList.toggle('on', j === i));
+  // ----- 내비 팔레트 -----
+  const readPal = () => { try { return sessionStorage.getItem(NAV_PAL_KEY); } catch { return null; } };
+  const writePal = (id) => { try { sessionStorage.setItem(NAV_PAL_KEY, id); } catch {} };
+  const applyPal = (c) => {
+    root.style.setProperty('--nav-pal', c.bg);
+    root.style.setProperty('--nav-pal-fg', c.fg);
+    root.dataset.navPal = c.id;
   };
-  addEventListener('scroll', spy, { passive: true }); addEventListener('resize', spy); spy();
+  let curPal = colorById(readPal() || 'cream');
+  applyPal(curPal);
+  addEventListener('pageshow', () => { curPal = colorById(readPal() || 'cream'); applyPal(curPal); });
+
+  // ----- 페이지별 위젯 (soft nav 후 다시 붙인다) -----
+  let pageAbort = null;
+  const initPage = () => {
+    if (pageAbort) pageAbort.abort();
+    pageAbort = new AbortController();
+    const { signal } = pageAbort;
+
+    const archive = document.querySelector('ul.archive');
+    if (archive) {
+      const tools = document.querySelector('.arch-tools');
+      const q = tools?.querySelector('.arch-q');
+      const empty = document.querySelector('.arch-empty');
+      if (tools && q && empty) {
+        const items = [...archive.querySelectorAll('li[data-k]')];
+        tools.hidden = false;
+        q.addEventListener('input', () => {
+          const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+          let hits = 0;
+          items.forEach((li) => { const ok = words.every((w) => li.dataset.k.includes(w)); li.hidden = !ok; if (ok) hits++; });
+          empty.hidden = hits > 0;
+        }, { signal });
+      }
+    }
+
+    const prose = document.querySelector('.prose');
+    const toc = document.querySelector('.ftoc');
+    document.body.classList.remove('has-toc');
+    if (!prose || !toc) return;
+    const hs = [...prose.querySelectorAll('h2[id], h3[id], details.fold')].filter((h) => !h.parentElement.closest('details'));
+    if (hs.length < 2) return;
+    const rail = toc.querySelector('.ftoc-rail');
+    const list = toc.querySelector('.ftoc-list');
+    if (!rail || !list) return;
+    rail.replaceChildren();
+    list.replaceChildren();
+    const lines = [], links = [];
+    for (const h of hs) {
+      const fold = h.tagName === 'DETAILS';
+      const lvl = fold ? 'h2' : h.tagName.toLowerCase();
+      if (fold && !h.id) h.id = `fold-${lines.length}`;
+      const line = document.createElement('span'); line.className = `ftoc-line ${lvl}`; rail.appendChild(line); lines.push(line);
+      const a = document.createElement('a'); a.href = `#${h.id}`; a.className = lvl;
+      a.textContent = fold ? h.querySelector('summary').textContent : h.textContent;
+      list.appendChild(a); links.push(a);
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (fold) h.open = true;
+        h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(history.state, '', `#${h.id}`);
+        toc.classList.remove('open');
+      }, { signal });
+    }
+    document.body.classList.add('has-toc');
+    toc.querySelector('.ftoc-btn')?.addEventListener('click', (e) => { e.stopPropagation(); toc.classList.toggle('open'); }, { signal });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.ftoc')) toc.classList.remove('open'); }, { signal });
+    let spyCur = -1;
+    const spy = () => {
+      let i = -1;
+      hs.forEach((h, j) => { if (h.offsetParent !== null && h.getBoundingClientRect().top <= 120) i = j; });
+      if (i === spyCur) return; spyCur = i;
+      lines.forEach((l, j) => l.classList.toggle('on', j === i));
+      links.forEach((l, j) => l.classList.toggle('on', j === i));
+    };
+    addEventListener('scroll', spy, { passive: true, signal });
+    addEventListener('resize', spy, { signal });
+    spy();
+  };
+  initPage();
+
+  // ----- soft navigation (탭·태그만; 글 본문 링크는 전체 이동) -----
+  let fetchAbort = null;
+  let navGen = 0;
+
+  const setTopNavCurrent = (pathname) => {
+    const nav = document.querySelector('.topnav .nav');
+    if (!nav) return;
+    const links = [...nav.querySelectorAll(':scope > a[href]')].map((a) => ({ href: a.href, el: a }));
+    const synced = syncNavCurrent(links.map(({ href }) => ({ href })), pathname);
+    synced.forEach((s, i) => {
+      if (s.current) links[i].el.setAttribute('aria-current', 'page');
+      else links[i].el.removeAttribute('aria-current');
+    });
+  };
+
+  const swapDocument = (html, url, { applyPalAfter = null } = {}) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const newMain = doc.querySelector('#main');
+    const curMain = document.querySelector('#main');
+    if (!newMain || !curMain) throw new Error('missing #main');
+    newMain.querySelectorAll('script').forEach((s) => s.remove());
+    curMain.replaceWith(document.importNode(newMain, true));
+
+    document.title = doc.title || document.title;
+    const abs = new URL(url, location.href);
+    setTopNavCurrent(abs.pathname);
+
+    const newCanon = doc.querySelector('link[rel="canonical"]');
+    let canon = document.head.querySelector('link[rel="canonical"]');
+    if (newCanon) {
+      if (!canon) { canon = document.createElement('link'); canon.rel = 'canonical'; document.head.appendChild(canon); }
+      canon.href = newCanon.href;
+    }
+    const newDesc = doc.querySelector('meta[name="description"]');
+    const desc = document.head.querySelector('meta[name="description"]');
+    if (newDesc && desc) desc.setAttribute('content', newDesc.getAttribute('content') || '');
+
+    document.querySelector('.ftoc')?.remove();
+    document.body.classList.remove('has-toc');
+    const newToc = doc.querySelector('.ftoc');
+    if (newToc) {
+      newToc.querySelectorAll('script').forEach((s) => s.remove());
+      const script = document.querySelector('script[type="module"][src*="site.js"]');
+      if (script) script.before(document.importNode(newToc, true));
+      else document.body.appendChild(document.importNode(newToc, true));
+    }
+
+    // aria-current already updated above; then palette so the outgoing tab never wore the new pill.
+    if (applyPalAfter) { applyPal(applyPalAfter); curPal = applyPalAfter; }
+    initPage();
+    window.scrollTo(0, 0);
+    const main = document.querySelector('#main');
+    if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+  };
+
+  const softNavigate = async (url, { push = true, applyPalAfter = null } = {}) => {
+    const gen = ++navGen;
+    if (fetchAbort) fetchAbort.abort();
+    fetchAbort = new AbortController();
+    try {
+      const res = await fetch(url, { signal: fetchAbort.signal, headers: { Accept: 'text/html' }, credentials: 'same-origin' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      if (gen !== navGen) return;
+      swapDocument(html, url, { applyPalAfter });
+      if (push) history.pushState({ soft: 1 }, '', url);
+    } catch (err) {
+      if (err?.name === 'AbortError') return;
+      location.assign(url);
+    }
+  };
+
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest?.('a[href]');
+    if (!a || !isSoftNavClickTarget(a)) return;
+    if (isModifiedClick(e)) return;
+
+    const isTopNav = !!a.matches('.topnav .nav > a[href]');
+    const samePage = a.getAttribute('aria-current') === 'page' || samePath(a.href, location.href);
+    const plan = planSoftClick({ isTopNav, curId: curPal.id, samePage, modified: false });
+
+    if (plan.action === 'native') return;
+    if (plan.action === 'ignore' || plan.action === 'noop') { e.preventDefault(); return; }
+
+    if (plan.action === 'palette-only') {
+      e.preventDefault();
+      writePal(plan.next.id);
+      applyPal(plan.next);
+      curPal = plan.next;
+      return;
+    }
+
+    if (plan.action === 'soft') {
+      e.preventDefault();
+      let applyAfter = null;
+      if (plan.write) {
+        writePal(plan.next.id);
+        applyAfter = plan.next; // apply only after successful swap (keeps hard-nav flash fix if fetch falls back)
+      }
+      softNavigate(a.href, { push: true, applyPalAfter: applyAfter });
+    }
+  });
+
+  addEventListener('popstate', () => {
+    softNavigate(location.href, { push: false, applyPalAfter: colorById(readPal() || 'cream') });
+  });
 })();

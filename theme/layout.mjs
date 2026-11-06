@@ -82,7 +82,7 @@ ${head}
 <body class="l-${layout}">
 ${chrome}
 ${toc ? tocHtml : ''}
-<script src="/assets/site.js?v=${assetVersion}" defer></script>
+<script type="module" src="/assets/site.js?v=${assetVersion}"></script>
 </body>
 </html>
 `;

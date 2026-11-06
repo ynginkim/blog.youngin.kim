@@ -125,7 +125,8 @@ const css = fs.readFileSync(path.join(ROOT, 'theme/style.css'), 'utf8') + `
 .wm { font-family: "${wm.family} Wordmark", ui-rounded, system-ui, sans-serif; font-weight: ${wm.weight}; font-size: ${wm.size}; letter-spacing: ${wm.ls}; }
 `;
 const js = fs.readFileSync(path.join(ROOT, 'theme/site.js'), 'utf8');
-const assetVersion = crypto.createHash('sha1').update(css + js).digest('hex').slice(0, 8);
+const softNavLogic = fs.readFileSync(path.join(ROOT, 'theme/soft-nav-logic.mjs'), 'utf8');
+const assetVersion = crypto.createHash('sha1').update(css + js + softNavLogic).digest('hex').slice(0, 8);
 const nav = site.nav ?? [['/posts/', '글'], ['/about/', '소개']];
 const render = createLayout({ site, layout: LAYOUT, nav, series, posts, assetVersion, wmFile });
 
@@ -157,6 +158,7 @@ fs.writeFileSync(path.join(OUT, 'assets/style.css'), css);
 fs.mkdirSync(path.join(OUT, 'assets/fonts'), { recursive: true });
 fs.writeFileSync(path.join(OUT, wmFile), wmFont);
 fs.writeFileSync(path.join(OUT, 'assets/site.js'), js);
+fs.writeFileSync(path.join(OUT, 'assets/soft-nav-logic.mjs'), softNavLogic);
 
 // 목록 한 줄: 제목 + 작성일만
 const dotDate = (d) => d.replaceAll('-', '.');
