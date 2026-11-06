@@ -1,7 +1,7 @@
 // 테마 · 사이드바 · 내비 팔레트 · 탭/태그 soft nav · 검색 · 목차
 import {
   NAV_PAL_KEY, NAV_COLORS, colorById, pickNextColor,
-  isModifiedClick, isSoftNavClickTarget, samePath, canSoftNavigate,
+  isModifiedClick, isSoftNavClickTarget, isSameDocumentUrl, isTopNavTab,
   planSoftClick, syncNavCurrent,
 } from './soft-nav-logic.mjs';
 
@@ -161,9 +161,20 @@ import {
     // aria-current already updated above; then palette so the outgoing tab never wore the new pill.
     if (applyPalAfter) { applyPal(applyPalAfter); curPal = applyPalAfter; }
     initPage();
+    const scrollRoot = document.scrollingElement || document.documentElement;
+    scrollRoot.scrollTop = 0;
+    scrollRoot.scrollLeft = 0;
     window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.body.scrollLeft = 0;
     const main = document.querySelector('#main');
-    if (main) { main.setAttribute('tabindex', '-1'); main.focus({ preventScroll: true }); }
+    if (main) {
+      main.setAttribute('tabindex', '-1');
+      main.focus({ preventScroll: true });
+      // focus must not reintroduce horizontal offset on narrow viewports
+      scrollRoot.scrollLeft = 0;
+      document.body.scrollLeft = 0;
+    }
   };
 
   const softNavigate = async (url, { push = true, applyPalAfter = null } = {}) => {
@@ -188,9 +199,11 @@ import {
     if (!a || !isSoftNavClickTarget(a)) return;
     if (isModifiedClick(e)) return;
 
-    const isTopNav = !!a.matches('.topnav .nav > a[href]');
-    const samePage = a.getAttribute('aria-current') === 'page' || samePath(a.href, location.href);
-    const plan = planSoftClick({ isTopNav, curId: curPal.id, samePage, modified: false });
+    const isTopNav = isTopNavTab(a);
+    // Exact URL only — aria-current is section highlight (글 stays current on /posts/tags/…).
+    const samePage = isSameDocumentUrl(a.href, location.href);
+    const curId = readPal() || curPal.id;
+    const plan = planSoftClick({ isTopNav, curId, samePage, modified: false });
 
     if (plan.action === 'native') return;
     if (plan.action === 'ignore' || plan.action === 'noop') { e.preventDefault(); return; }

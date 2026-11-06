@@ -1,4 +1,4 @@
-// Pure helpers for same-origin soft navigation (tabs/tags). No DOM.
+// Pure helpers for same-origin soft navigation (tabs/tags/brand). No DOM.
 export const NAV_PAL_KEY = 'navPal';
 export const NAV_COLORS = [
   { id: 'cream', bg: '#E3CDB1', fg: '#0E1013' },
@@ -21,41 +21,63 @@ export function isModifiedClick(e) {
   return e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.defaultPrevented;
 }
 
-/** Top-nav tab, tagbar chip, or home 꼭지 link — not article rows. */
-export function isSoftNavClickTarget(el) {
-  if (!el || el.tagName !== 'A' || !el.getAttribute('href')) return false;
-  if (el.matches?.('.topnav .nav > a[href]')) return true;
-  if (el.closest?.('.tagbar') && el.matches?.('a[href]')) return true;
-  if (el.closest?.('.home-links') && el.matches?.('a[href]')) return true;
-  return false;
+/** Normalize path/search/hash for exact same-document checks (trailing slash kept as-is). */
+export function normalizeUrlParts(href, base) {
+  const u = new URL(href, base);
+  return {
+    origin: u.origin,
+    pathname: u.pathname,
+    search: u.search,
+    hash: u.hash,
+    key: `${u.pathname}${u.search}${u.hash}`,
+  };
 }
 
-export function samePath(aHref, locationHref) {
+/** Exact same document: origin + pathname + search + hash. Never use aria-current. */
+export function isSameDocumentUrl(aHref, locationHref) {
   try {
-    const a = new URL(aHref, locationHref);
-    const b = new URL(locationHref);
-    return a.origin === b.origin && a.pathname === b.pathname;
+    const a = normalizeUrlParts(aHref, locationHref);
+    const b = normalizeUrlParts(locationHref, locationHref);
+    return a.origin === b.origin && a.key === b.key;
   } catch {
     return false;
   }
 }
 
+/** @deprecated alias — prefer isSameDocumentUrl */
+export function samePath(aHref, locationHref) {
+  return isSameDocumentUrl(aHref, locationHref);
+}
+
 export function canSoftNavigate(aHref, locationHref) {
   try {
-    const a = new URL(aHref, locationHref);
-    const b = new URL(locationHref);
+    const a = normalizeUrlParts(aHref, locationHref);
+    const b = normalizeUrlParts(locationHref, locationHref);
     if (a.origin !== b.origin) return false;
-    if (a.pathname === b.pathname && a.search === b.search) return false; // same page: let caller handle
-    // hash-only on other pages ok; ignore pure hash on same path (already false above if path same)
+    if (a.key === b.key) return false;
     return true;
   } catch {
     return false;
   }
 }
 
+/** Top-nav tab, brand home, tagbar chip, or home 꼭지 — not article rows. */
+export function isSoftNavClickTarget(el) {
+  if (!el || el.tagName !== 'A' || !el.getAttribute('href')) return false;
+  if (el.matches?.('.topnav .nav > a[href]')) return true;
+  if (el.matches?.('.topnav a.brand[href]')) return true;
+  if (el.closest?.('.tagbar') && el.matches?.('a[href]')) return true;
+  if (el.closest?.('.home-links') && el.matches?.('a[href]')) return true;
+  return false;
+}
+
+export function isTopNavTab(el) {
+  return !!el?.matches?.('.topnav .nav > a[href]');
+}
+
 /**
- * Top-nav click plan. Cross-page soft nav: store new palette, apply after aria-current moves (not before).
- * Same-page: store+apply now, no navigation.
+ * Top-nav click plan. Cross-route: store new palette, apply after aria-current/DOM swap.
+ * Same exact URL: store+apply now, no navigation.
  */
 export function planTopNavPaletteClick({ curId, samePage, rand = Math.random }) {
   const next = pickNextColor(curId, NAV_COLORS, rand);
@@ -70,10 +92,12 @@ export function planSoftClick({ isTopNav, curId, samePage, modified, rand = Math
     if (samePage) return { action: 'palette-only', ...p };
     return { action: 'soft', ...p };
   }
+  // brand / tag / home-links
   if (samePage) return { action: 'noop', preventDefault: true };
   return { action: 'soft', write: false, applyNow: false, softNav: true, preventDefault: true };
 }
 
+/** Section highlighting for 글/소개 — not used for same-page navigation equality. */
 export function syncNavCurrent(links, pathname) {
   return links.map(({ href }) => {
     try {
@@ -83,6 +107,8 @@ export function syncNavCurrent(links, pathname) {
         current = pathname === '/posts/' || pathname.startsWith('/posts/') || pathname.startsWith('/tags/');
       } else if (path === '/about/') {
         current = pathname === '/about/' || pathname.startsWith('/about/');
+      } else if (path === '/') {
+        current = pathname === '/';
       } else {
         current = pathname === path;
       }

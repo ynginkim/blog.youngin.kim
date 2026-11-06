@@ -88,8 +88,8 @@ main { display: block; min-height: 60vh; }
 
 /* ---------- 상단 네비게이션 (topnav · hybrid) ---------- */
 .topnav { padding-top: 40px; }
-.topnav-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 40px; }
-.brand { font-weight: 700; color: var(--head); text-decoration: none; font-size: 17px; letter-spacing: -.01em; }
+.topnav-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 40px; min-width: 0; }
+.brand { font-weight: 700; color: var(--head); text-decoration: none; font-size: 17px; letter-spacing: -.01em; min-width: 0; }
 .nav { display: flex; align-items: center; gap: 2px; }
 .nav a { color: var(--muted); text-decoration: none; font-size: 15px; padding: 4px 10px; border-radius: 6px; transition: color .15s; }
 .nav a:hover { color: var(--head); }

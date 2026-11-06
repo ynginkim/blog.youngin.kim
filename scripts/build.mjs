@@ -123,6 +123,11 @@ const wmFile = `/assets/fonts/wordmark-${wmKey}.${crypto.createHash('sha1').upda
 const css = fs.readFileSync(path.join(ROOT, 'theme/style.css'), 'utf8') + `
 @font-face { font-family: "${wm.family} Wordmark"; src: url("${wmFile}") format("woff2"); font-weight: ${wm.weight}; font-display: swap; }
 .wm { font-family: "${wm.family} Wordmark", ui-rounded, system-ui, sans-serif; font-weight: ${wm.weight}; font-size: ${wm.size}; letter-spacing: ${wm.ls}; }
+@media (max-width: 640px) {
+  .wm { font-size: 19px; }
+  .topnav-in { gap: 8px; }
+  .nav a { padding: 4px 8px; }
+}
 `;
 const js = fs.readFileSync(path.join(ROOT, 'theme/site.js'), 'utf8');
 const softNavLogic = fs.readFileSync(path.join(ROOT, 'theme/soft-nav-logic.mjs'), 'utf8');
