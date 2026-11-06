@@ -453,17 +453,25 @@ html[data-palette="a"] .tagbar a[aria-current] {
 :root[data-theme="dark"][data-palette="a"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-cream) 35%, var(--line)); }
 :root[data-theme="dark"][data-palette="a"] .foot { border-top-color: color-mix(in srgb, var(--pal-cream) 28%, var(--line)); }
 
-/* B: 장식 없이, 기존 점·구분선·선택 내비/태그에 한 톤만 */
+/* B: 장식 없이. 활성 상단 메뉴(글/소개) 필은 sessionStorage로 5색 순환. 링크는 다크틸 */
+html[data-palette="b"] {
+  --nav-pal: #E3CDB1;
+  --nav-pal-fg: #0E1013;
+  --link: #294F4F;
+  --link-visited: #1F3A3A;
+  --link-hover: #163030;
+}
 html[data-palette="b"] .brand .wm-dot { color: var(--pal-muted); }
 html[data-palette="b"] .hgroup h2,
 html[data-palette="b"] .sec-h,
 html[data-palette="b"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-muted) 32%, var(--line)); }
 html[data-palette="b"] .foot { border-top-color: color-mix(in srgb, var(--pal-muted) 26%, var(--line)); }
 html[data-palette="b"] .nav a[aria-current] {
-  color: var(--head);
-  background: color-mix(in srgb, var(--pal-cream) 58%, transparent);
+  background: var(--nav-pal);
+  color: var(--nav-pal-fg);
   border-radius: 6px;
 }
+html[data-palette="b"] .nav a[aria-current]:hover { color: var(--nav-pal-fg); }
 html[data-palette="b"] .tagbar a[aria-current] {
   color: var(--head);
   font-weight: 650;
@@ -471,9 +479,39 @@ html[data-palette="b"] .tagbar a[aria-current] {
   padding: 2px 8px; margin: -2px -8px; border-radius: 6px;
   text-decoration: none;
 }
+html[data-palette="b"] a.link,
+html[data-palette="b"] .prose a.link,
+html[data-palette="b"] .prose a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--link) 40%, transparent);
+}
+html[data-palette="b"] a.link:visited,
+html[data-palette="b"] .prose a.link:visited,
+html[data-palette="b"] .prose a:visited { color: var(--link-visited); }
+html[data-palette="b"] a.link:hover,
+html[data-palette="b"] .prose a.link:hover,
+html[data-palette="b"] .prose a:hover {
+  color: var(--link-hover);
+  text-decoration-thickness: 2px;
+  text-decoration-color: currentColor;
+}
+html[data-palette="b"] .pj-name { color: var(--link); }
+html[data-palette="b"] .pj-card:visited .pj-name { color: var(--link-visited); }
+html[data-palette="b"] .pj-card:hover .pj-name { color: var(--link-hover); text-decoration-color: currentColor; }
+html[data-palette="b"] .pj-card:focus-visible { outline-color: var(--link); }
+html[data-palette="b"] .hlist a:hover .t,
+html[data-palette="b"] .slist a:hover .t { color: var(--link); }
+:root[data-theme="dark"][data-palette="b"] {
+  --link: #7BB0B0;
+  --link-visited: #9BC4C4;
+  --link-hover: #B2D4D4;
+}
 :root[data-theme="dark"][data-palette="b"] .nav a[aria-current],
 :root[data-theme="dark"][data-palette="b"] .tagbar a[aria-current] {
-  background: color-mix(in srgb, var(--pal-cream) 22%, transparent);
+  /* 필 색은 JS/--nav-pal 유지. 크림일 때만 글자 대비는 라이트와 동일 */
 }
 :root[data-theme="dark"][data-palette="b"] .hgroup h2,
 :root[data-theme="dark"][data-palette="b"] .sec-h,

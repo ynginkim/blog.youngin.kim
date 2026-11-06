@@ -42,6 +42,41 @@
     });
   }
 
+
+  // B 시안: 상단 내비(글/소개) 클릭 시 활성 필 색을 5색 중 다른 색으로. sessionStorage로 페이지 이동 후에도 유지.
+  if (document.documentElement.dataset.palette === 'b') {
+    const root = document.documentElement;
+    const KEY = 'navPal';
+    const COLORS = [
+      { id: 'cream', bg: '#E3CDB1', fg: '#0E1013' },
+      { id: 'olive', bg: '#7C5C3E', fg: '#FFFFFF' },
+      { id: 'muted', bg: '#726A4D', fg: '#FFFFFF' },
+      { id: 'terra', bg: '#AA5C3C', fg: '#FFFFFF' },
+      { id: 'teal', bg: '#294F4F', fg: '#FFFFFF' },
+    ];
+    const byId = (id) => COLORS.find((c) => c.id === id) || COLORS[0];
+    const read = () => { try { return sessionStorage.getItem(KEY); } catch { return null; } };
+    const write = (id) => { try { sessionStorage.setItem(KEY, id); } catch {} };
+    const apply = (c) => {
+      root.style.setProperty('--nav-pal', c.bg);
+      root.style.setProperty('--nav-pal-fg', c.fg);
+      root.dataset.navPal = c.id;
+    };
+    let cur = byId(read() || 'cream');
+    apply(cur);
+    document.querySelectorAll('.topnav .nav > a[href]').forEach((a) => {
+      a.addEventListener('click', (e) => {
+        if (e.defaultPrevented || e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const others = COLORS.filter((c) => c.id !== cur.id);
+        const next = others[Math.floor(Math.random() * others.length)] || COLORS[0];
+        write(next.id);
+        apply(next);
+        cur = next;
+      });
+    });
+  }
+
   // 목차
   const prose = document.querySelector('.prose');
   const toc = document.querySelector('.ftoc');

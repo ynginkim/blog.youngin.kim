@@ -13,7 +13,7 @@ export const ICON = {
 const themeBtn = () => `<button class="icon-btn theme-btn" type="button" aria-label="다크 모드 전환" title="라이트/다크 전환" aria-pressed="false">${ICON.sun}${ICON.moon}</button>`;
 
 // 첫 페인트 전에 테마·사이드바 상태를 적용해 깜빡임을 막는다. 기본은 라이트.
-const BOOT = `<script>(function(){try{var d=document.documentElement;if(localStorage.getItem('theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('sb')==='0')d.classList.add('sb-collapsed')}catch(e){}})()</script>`;
+const BOOT = `<script>(function(){try{var d=document.documentElement;if(localStorage.getItem('theme')==='dark')d.dataset.theme='dark';if(localStorage.getItem('sb')==='0')d.classList.add('sb-collapsed');if(d.dataset.palette==='b'){var id=sessionStorage.getItem('navPal')||'cream';var m={cream:['#E3CDB1','#0E1013'],olive:['#7C5C3E','#FFFFFF'],muted:['#726A4D','#FFFFFF'],terra:['#AA5C3C','#FFFFFF'],teal:['#294F4F','#FFFFFF']};var c=m[id]||m.cream;d.style.setProperty('--nav-pal',c[0]);d.style.setProperty('--nav-pal-fg',c[1]);d.dataset.navPal=m[id]?id:'cream'}}catch(e){}})()</script>`;
 
 // 워드마크: 점만 강조색
 const wordmark = (text) => text.split('.').map(esc).join('<span class="wm-dot">.</span>');
