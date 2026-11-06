@@ -43,8 +43,8 @@
   }
 
 
-  // B 시안: 상단 내비(글/소개) 클릭 시 활성 필 색을 5색 중 다른 색으로. sessionStorage로 페이지 이동 후에도 유지.
-  if (document.documentElement.dataset.palette === 'b') {
+  // 상단 내비(글/소개): 일반 클릭마다 활성 필을 5색 중 다른 색으로. sessionStorage로 페이지 이동 후에도 유지.
+  {
     const root = document.documentElement;
     const KEY = 'navPal';
     const COLORS = [
