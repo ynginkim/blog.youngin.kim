@@ -29,9 +29,9 @@
   --pal-teal: #294F4F;
   --nav-pal: #E3CDB1;
   --nav-pal-fg: #0E1013;
-  --link: #294F4F;
-  --link-visited: #1F3A3A;
-  --link-hover: #163030;
+  --link: #007F7A;
+  --link-visited: #006B67;
+  --link-hover: #005E5A;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
