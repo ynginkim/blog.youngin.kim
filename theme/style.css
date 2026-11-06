@@ -416,3 +416,65 @@ a.link:hover, .prose a.link:hover { color: #0B0080; text-decoration-thickness: 2
 .pj-desc { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
 .pj-host { color: var(--faint); font-size: 12.5px; line-height: 1.5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 640px) { .pj-card, .prose .pj-card { align-items: flex-start; } .pj-img { width: 64px; height: 64px; } }
+
+/* ---------- 퍼스널 팔레트 시안 (미리보기 전용). data-palette=a|b. 본문·링크·배경은 그대로 ---------- */
+:root {
+  --pal-olive: #7C5C3E;
+  --pal-muted: #726A4D;
+  --pal-cream: #E3CDB1;
+  --pal-terra: #AA5C3C;
+  --pal-teal: #294F4F;
+}
+/* A: 워드마크 옆 5점 · 활성 내비 cream 밑줄 · 구분선에 cream을 아주 약하게 */
+html[data-palette="a"] .brand.wm::after {
+  content: "";
+  display: inline-block;
+  width: 4px; height: 4px; margin-left: 11px; vertical-align: 0.18em;
+  border-radius: 50%; background: var(--pal-olive);
+  box-shadow: 7px 0 0 var(--pal-muted), 14px 0 0 var(--pal-cream), 21px 0 0 var(--pal-terra), 28px 0 0 var(--pal-teal);
+}
+html[data-palette="a"] .brand .wm-dot { color: var(--pal-terra); }
+html[data-palette="a"] .brand .wm-dot:last-of-type { color: var(--pal-teal); }
+html[data-palette="a"] .nav a[aria-current] {
+  color: var(--head);
+  box-shadow: inset 0 -2px 0 var(--pal-cream);
+  border-radius: 0;
+}
+html[data-palette="a"] .hgroup h2,
+html[data-palette="a"] .sec-h,
+html[data-palette="a"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-cream) 70%, var(--line)); }
+html[data-palette="a"] .foot { border-top-color: color-mix(in srgb, var(--pal-cream) 55%, var(--line)); }
+html[data-palette="a"] .tagbar a[aria-current] {
+  text-decoration-color: var(--pal-cream);
+}
+:root[data-theme="dark"][data-palette="a"] .nav a[aria-current] { box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--pal-cream) 75%, #000); }
+:root[data-theme="dark"][data-palette="a"] .hgroup h2,
+:root[data-theme="dark"][data-palette="a"] .sec-h,
+:root[data-theme="dark"][data-palette="a"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-cream) 35%, var(--line)); }
+:root[data-theme="dark"][data-palette="a"] .foot { border-top-color: color-mix(in srgb, var(--pal-cream) 28%, var(--line)); }
+
+/* B: 장식 없이, 기존 점·구분선·선택 내비/태그에 한 톤만 */
+html[data-palette="b"] .brand .wm-dot { color: var(--pal-muted); }
+html[data-palette="b"] .hgroup h2,
+html[data-palette="b"] .sec-h,
+html[data-palette="b"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-muted) 32%, var(--line)); }
+html[data-palette="b"] .foot { border-top-color: color-mix(in srgb, var(--pal-muted) 26%, var(--line)); }
+html[data-palette="b"] .nav a[aria-current] {
+  color: var(--head);
+  background: color-mix(in srgb, var(--pal-cream) 58%, transparent);
+  border-radius: 6px;
+}
+html[data-palette="b"] .tagbar a[aria-current] {
+  color: var(--head);
+  font-weight: 650;
+  background: color-mix(in srgb, var(--pal-cream) 58%, transparent);
+  padding: 2px 8px; margin: -2px -8px; border-radius: 6px;
+  text-decoration: none;
+}
+:root[data-theme="dark"][data-palette="b"] .nav a[aria-current],
+:root[data-theme="dark"][data-palette="b"] .tagbar a[aria-current] {
+  background: color-mix(in srgb, var(--pal-cream) 22%, transparent);
+}
+:root[data-theme="dark"][data-palette="b"] .hgroup h2,
+:root[data-theme="dark"][data-palette="b"] .sec-h,
+:root[data-theme="dark"][data-palette="b"] .prose.linkpage h2 { border-bottom-color: color-mix(in srgb, var(--pal-muted) 40%, var(--line)); }
