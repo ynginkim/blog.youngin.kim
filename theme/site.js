@@ -64,6 +64,10 @@
     };
     let cur = byId(read() || 'cream');
     apply(cur);
+    const sameNav = (a) => {
+      if (a.getAttribute('aria-current') === 'page') return true;
+      try { return new URL(a.href).pathname === location.pathname; } catch { return false; }
+    };
     document.querySelectorAll('.topnav .nav > a[href]').forEach((a) => {
       a.addEventListener('click', (e) => {
         if (e.defaultPrevented || e.button !== 0) return;
@@ -71,9 +75,18 @@
         const others = COLORS.filter((c) => c.id !== cur.id);
         const next = others[Math.floor(Math.random() * others.length)] || COLORS[0];
         write(next.id);
-        apply(next);
-        cur = next;
+        // 다른 페이지로 갈 때는 나가는 화면의 필 색을 바꾸지 않는다. 도착 페이지 BOOT이 적용.
+        if (sameNav(a)) {
+          e.preventDefault();
+          apply(next);
+          cur = next;
+        }
       });
+    });
+    // bfcache 복원 시 storage의 색으로 맞춘다.
+    addEventListener('pageshow', () => {
+      cur = byId(read() || 'cream');
+      apply(cur);
     });
   }
 
